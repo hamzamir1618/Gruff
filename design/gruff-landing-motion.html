@@ -1,0 +1,1166 @@
+<title>GRUFF Front Page in Motion</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=DM+Mono:wght@400;500&family=IM+Fell+English:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Rozha+One&family=Shrikhand&display=swap">
+<style>
+/* Layout: a document wrapper (cover → live prototype → transition lab → motion tokens → spec cards → build notes).
+   The prototype is the real landing page at full width; every animation in it is numbered and replayable.
+   Single light theme by choice: the brand is printed newsprint. */
+:root{
+  --doc-bg:#E9E6E0; --doc-card:#F3F1EC; --doc-ink:#1A1A1A; --doc-mute:#6A655E; --doc-rule:#CFCAC0;
+  --paper:#F8F6F1; --ink:#1A1A1A; --ink2:#67625B; --rule:#D3CEC4; --red:#B3261E; --night:#161412; --amber:#F4A23A; --cream:#F1EEE7;
+  --gold:url("assets/gold-leaf.jpg");
+  --f-head:"Rozha One", "Bodoni 72", Didot, Georgia, serif;
+  --f-body:"IM Fell English", Georgia, "Times New Roman", serif;
+  --f-type:"Courier Prime", "Courier New", monospace;
+  --f-script:"Shrikhand", "Cooper Black", Georgia, serif;
+  --f-doc:"Newsreader", Georgia, serif;
+  --f-label:"DM Mono", ui-monospace, Consolas, monospace;
+  --e-press:cubic-bezier(.76,0,.24,1); --e-ink:cubic-bezier(.33,1,.68,1); --e-settle:cubic-bezier(.34,1.56,.64,1); --e-slam:cubic-bezier(.7,0,.84,0);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:auto}
+body{background:var(--doc-bg);color:var(--doc-ink);font-family:var(--f-doc);font-size:17px;line-height:1.55;overflow-x:clip}
+img{max-width:100%;display:block}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.defs{position:absolute;width:0;height:0;overflow:hidden}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:clamp(16px,4vw,48px)}
+.label{font-family:var(--f-label);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--doc-mute)}
+h1,h2,h3{text-wrap:balance}
+p{max-width:65ch}
+
+/* ================= DOC: cover ================= */
+.cover{padding-block:44px 36px;display:grid;gap:18px}
+.cover-meta{display:flex;flex-wrap:wrap;gap:8px 28px}
+.cover h1{font-size:clamp(38px,6vw,74px);line-height:1;font-weight:400;margin:4px 0 0;letter-spacing:-.01em}
+.cover h1 em{color:var(--red)}
+.cover .lead{font-size:20px;color:#3a352f;margin:0}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:6px}
+.how div{background:var(--doc-card);border-radius:6px;padding:14px 16px;font-size:15.5px;line-height:1.4;display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start}
+.how b{display:block;font-weight:600}
+.how .ic{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:700 12px var(--f-type);color:#fff;background:var(--red)}
+.how .ic.k{background:var(--ink)}
+.map{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.map a{font:12px var(--f-label);text-decoration:none;border:1px solid var(--doc-rule);border-radius:99px;padding:4px 10px;background:var(--doc-card);color:var(--doc-ink);transition:background .15s,color .15s}
+.map a:hover{background:var(--ink);color:var(--paper)}
+.map a b{color:var(--red);font-weight:500;margin-right:4px}
+.map a:hover b{color:#F3A39C}
+
+/* prototype label bar */
+.proto-bar{position:relative;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:12px;border-top:1px solid var(--doc-rule)}
+.proto-bar .left{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.chip-url{font:12px var(--f-label);background:var(--doc-card);border-radius:6px;padding:4px 10px;color:var(--doc-mute)}
+.tog{display:inline-flex;align-items:center;gap:8px;font:12px var(--f-label);letter-spacing:.08em;text-transform:uppercase;color:var(--doc-ink);border:1px solid var(--doc-rule);border-radius:99px;padding:5px 12px;background:var(--doc-card)}
+.tog i{width:26px;height:14px;border-radius:99px;background:var(--doc-rule);position:relative;transition:background .2s}
+.tog i::after{content:"";position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:#fff;transition:transform .2s}
+.tog[aria-pressed="true"] i{background:var(--red)}
+.tog[aria-pressed="true"] i::after{transform:translateX(12px)}
+
+/* ================= SITE (the prototype) ================= */
+.site a{color:inherit}
+.site{position:relative;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.42;overflow-x:clip;box-shadow:0 -1px 0 var(--doc-rule),0 1px 0 var(--doc-rule)}
+.in{max-width:1240px;margin:0 auto;padding-inline:clamp(16px,3vw,40px)}
+.eng{mix-blend-mode:multiply}
+.bw{filter:grayscale(1) contrast(1.08)}
+.kicker{font-family:var(--f-type);font-size:12px;text-transform:uppercase;letter-spacing:.16em;color:var(--red);border-bottom:1px solid var(--ink);padding-bottom:6px;margin-bottom:12px}
+.credit{display:flex;justify-content:space-between;gap:10px;font-size:13px;font-style:italic;color:var(--ink2);margin-top:6px}
+.credit span:last-child{font-family:var(--f-type);font-style:normal;font-size:10px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.ht{--ht:7px;-webkit-mask-image:radial-gradient(circle,#000 var(--ht),transparent calc(var(--ht) + .7px));mask-image:radial-gradient(circle,#000 var(--ht),transparent calc(var(--ht) + .7px));-webkit-mask-size:9px 9px;mask-size:9px 9px;-webkit-mask-position:center;mask-position:center}
+
+/* pins */
+.pin{position:absolute;z-index:16;width:26px;height:26px;border-radius:50%;background:var(--red);color:#fff;font:700 11px var(--f-type);display:grid;place-items:center;box-shadow:0 0 0 2px var(--paper),0 2px 6px rgba(0,0,0,.25);animation:pinpulse 2.6s ease-out infinite}
+.pin:hover{transform:scale(1.12)}
+@keyframes pinpulse{0%{box-shadow:0 0 0 2px var(--paper),0 0 0 2px rgba(179,38,30,.55)}70%{box-shadow:0 0 0 2px var(--paper),0 0 0 14px rgba(179,38,30,0)}100%{box-shadow:0 0 0 2px var(--paper),0 0 0 14px rgba(179,38,30,0)}}
+.site:not(.notes) .pin{display:none}
+.rel{position:relative}
+
+/* mini masthead */
+.mini{position:sticky;top:env(safe-area-inset-top,0px);height:0;z-index:40}
+.mini-bar{position:absolute;left:0;right:0;top:0;background:var(--paper);border-bottom:1px solid var(--ink);visibility:hidden}
+.mini-in{display:flex;align-items:center;gap:22px;height:56px}
+.mini-logo{font-family:var(--f-head);font-size:28px;line-height:1;letter-spacing:.04em;background:var(--gold) center/cover;-webkit-background-clip:text;background-clip:text;color:transparent}
+.mini nav{display:flex;gap:20px;font-family:var(--f-type);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;flex:1}
+.mini nav a{text-decoration:none}
+.mini-page{font-family:var(--f-type);font-size:12px;letter-spacing:.1em;perspective:200px}
+.mini-page .pg{display:inline-block;min-width:.7em;text-align:center;font-weight:700;color:var(--red)}
+.mini-cta{font-family:var(--f-type);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;background:var(--red);color:#fff;padding:8px 14px;text-decoration:none}
+.mini-prog{position:absolute;left:0;right:0;bottom:-1px;height:2px}
+.mini-prog i{display:block;height:100%;background:var(--red);transform-origin:left;transform:scaleX(0)}
+.mini .pin{left:auto;right:12px;top:66px}
+
+/* ---- hero / front page ---- */
+.hero{position:relative;padding-bottom:36px}
+.intro{position:absolute;inset:0;z-index:30;overflow:hidden;pointer-events:none}
+.intro-top,.intro-bot{position:absolute;left:0;right:0;height:50.5%;background:var(--night)}
+.intro-top{top:0}
+.intro-bot{bottom:0}
+.roller{position:absolute;left:0;right:0;height:22px;background:linear-gradient(180deg,#0b0a09,#4a4744 30%,#9a9690 45%,#3a3836 70%,#0b0a09)}
+.intro-top .roller{bottom:-11px}
+.intro-bot .roller{top:-11px}
+.intro-count{position:absolute;inset:0;display:grid;place-content:center;text-align:center;color:var(--cream);font-family:var(--f-type);letter-spacing:.2em;text-transform:uppercase;font-size:13px;gap:10px}
+.intro-count b{font-family:var(--f-head);font-weight:400;font-size:clamp(56px,10vw,120px);letter-spacing:.02em;line-height:1;color:var(--cream)}
+.intro-count small{color:#9d978e;font-size:11px}
+.dateline{display:flex;justify-content:space-between;gap:12px;font-family:var(--f-type);font-size:12px;text-transform:uppercase;letter-spacing:.1em;border-block:1px solid var(--ink);padding-block:7px;margin-top:22px}
+.dl-type{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dl-type.typing::after{content:"▍";animation:blink .6s steps(1) infinite;color:var(--red)}
+@keyframes blink{50%{opacity:0}}
+.mast-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding-top:14px}
+.ear{display:flex;align-items:center;gap:12px;font-family:var(--f-type);font-size:12px;text-transform:uppercase;letter-spacing:.08em;line-height:1.4}
+.ear img{height:96px;width:auto}
+.ear.r{justify-self:end;text-align:right;border:1px solid var(--ink);padding:8px 12px;display:block}
+.ear.r b{display:block;font-family:var(--f-head);font-weight:400;font-size:19px;letter-spacing:.02em;color:var(--red);text-transform:none}
+.mast{position:relative;margin:0;font-family:var(--f-head);font-weight:400;font-size:clamp(76px,14.5vw,188px);line-height:.9;letter-spacing:.05em;text-align:center;--gx:50%;--gy:50%;filter:drop-shadow(0 2px 0 rgba(0,0,0,.25))}
+.ml{display:inline-block;background-image:var(--gold);background-size:340% auto;background-position:calc(var(--gx) + var(--o,0%)) var(--gy);-webkit-background-clip:text;background-clip:text;color:transparent;will-change:transform}
+.ml:nth-child(2){--o:18%}.ml:nth-child(3){--o:36%}.ml:nth-child(4){--o:54%}.ml:nth-child(5){--o:72%}
+.glint{position:absolute;inset:0;pointer-events:none;color:transparent;background:linear-gradient(105deg,transparent 40%,rgba(255,252,236,.95) 50%,transparent 60%) no-repeat;background-size:250% 100%;background-position:150% 0;-webkit-background-clip:text;background-clip:text}
+.tagline{text-align:center;font-style:italic;font-size:17px;color:var(--ink2);margin-top:2px}
+.mainnav{--rh:1;position:relative;display:flex;justify-content:center;flex-wrap:wrap;gap:8px 36px;padding-block:10px;margin-top:14px;font-family:var(--f-type);text-transform:uppercase;font-size:13px;letter-spacing:.14em}
+.mainnav::before,.mainnav::after{content:"";position:absolute;left:0;right:0;transform:scaleX(var(--rh));transform-origin:center}
+.mainnav::before{top:0;height:5px;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+.mainnav::after{bottom:0;height:1px;background:var(--ink)}
+.mainnav a{text-decoration:none;position:relative}
+.mainnav a::after{content:"";position:absolute;left:0;right:0;bottom:-3px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .3s var(--e-ink)}
+.mainnav a:hover::after{transform:scaleX(1);transform-origin:left}
+.mainnav .on{color:var(--red);font-weight:700}
+
+.ticker{position:relative;background:var(--ink);color:var(--paper);overflow:hidden;white-space:nowrap;font-family:var(--f-type);font-size:13px;letter-spacing:.12em;text-transform:uppercase;margin-top:18px}
+.tk-track{display:inline-flex;gap:44px;padding-block:10px;animation:tick 48s linear infinite;padding-left:44px}
+.ticker:hover .tk-track{animation-play-state:paused}
+.tk-track span{display:inline-flex;gap:10px;align-items:center}
+.tk-track b{background:var(--red);color:#fff;padding:1px 7px;font-weight:700}
+@keyframes tick{to{transform:translateX(-50%)}}
+.ticker .pin{left:12px;top:50%;margin-top:-13px}
+
+.fp-grid{--rv:1;display:grid;grid-template-columns:3fr 6fr 3.3fr;margin-top:24px}
+.fp-grid>*{position:relative;padding-inline:22px;min-width:0}
+.fp-grid>:first-child{padding-left:0}
+.fp-grid>:last-child{padding-right:0}
+.fp-grid>*+*::before{content:"";position:absolute;left:0;top:0;bottom:0;width:1px;background:var(--rule);transform:scaleY(var(--rv));transform-origin:top}
+.fp-col h3{font-family:var(--f-head);font-weight:400;font-size:27px;line-height:1.05;margin:0 0 12px}
+.fp-col .chef{width:100%;aspect-ratio:4/3.3;object-fit:cover;object-position:30% 30%}
+.fp-col p{margin:10px 0;text-align:justify;hyphens:auto;font-size:16px}
+.dropcap::first-letter{font-family:var(--f-head);float:left;font-size:50px;line-height:.8;padding:5px 6px 0 0;color:var(--red)}
+.cont{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-type);font-size:11px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none}
+.cont img{width:46px;transition:transform .3s var(--e-ink)}
+.cont:hover img{transform:translateX(6px)}
+.lp{font-family:var(--f-head);font-weight:400;font-size:clamp(36px,4.6vw,62px);line-height:.98;text-align:center;margin:0}
+.lp .w{display:inline-block}
+.deck{text-align:center;font-style:italic;font-size:19px;color:var(--ink2);margin:12px auto 16px;max-width:52ch}
+.lead-ph{width:100%;aspect-ratio:16/10.5;object-fit:cover;object-position:50% 78%}
+.fp-menu ul{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.fp-menu li{display:grid;grid-template-columns:58px 1fr;gap:12px;align-items:center}
+.fp-menu li img{width:58px;height:58px;object-fit:cover}
+.row{display:flex;align-items:baseline;gap:6px;font-size:17px}
+.ldr{flex:1;border-bottom:2px dotted var(--ink2);transform-origin:left}
+.row b{font-family:var(--f-type);font-weight:700}
+.fp-menu em{display:block;font-size:13px;color:var(--ink2)}
+.odo{display:inline-flex;font-variant-numeric:tabular-nums}
+.odo .d{display:inline-block;height:1.15em;line-height:1.15em;overflow:hidden;vertical-align:bottom}
+.odo .s{display:block}
+.order{position:relative;display:grid;grid-template-columns:1fr auto;align-items:end;gap:6px;margin-top:22px;min-height:120px}
+.stamp-wrap{position:relative;justify-self:start;margin:0 0 14px 4px}
+.stamp{position:relative;z-index:2;display:block;border:3px solid var(--red);outline:1.5px solid var(--red);outline-offset:4px;color:var(--red);text-align:center;padding:8px 16px;font-family:var(--f-head);font-size:22px;line-height:1.1;letter-spacing:.06em;text-transform:uppercase;transform:rotate(-4deg);background:transparent;transition:box-shadow .25s var(--e-ink),translate .25s var(--e-ink)}
+.stamp:hover{translate:0 -3px;box-shadow:0 10px 18px -10px rgba(179,38,30,.6)}
+.stamp small{display:block;font-family:var(--f-type);font-size:10px;letter-spacing:.14em}
+.stamp-ring{position:absolute;left:50%;top:50%;width:150px;height:150px;margin:-75px 0 0 -75px;border-radius:50%;border:3px solid var(--red);opacity:0;pointer-events:none}
+.ghost{position:absolute;z-index:1;inset:0;border:3px solid var(--red);opacity:.13;pointer-events:none}
+.boy{position:relative;width:104px;cursor:pointer}
+.bubble{position:absolute;right:62px;top:-30px;background:var(--paper);border:1.5px solid var(--ink);border-radius:50%;padding:6px 12px;font-family:var(--f-head);font-size:15px;white-space:nowrap;transform-origin:100% 100%}
+.bubble::after{content:"";position:absolute;right:8px;bottom:-8px;width:12px;height:12px;background:var(--paper);border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);transform:skewX(30deg) rotate(30deg)}
+
+/* section headers (inner pages) */
+.sec{padding-block:72px 64px;position:relative}
+.sec-h{display:grid;grid-template-columns:auto 1fr auto;align-items:end;gap:18px;border-bottom:5px double var(--ink);padding-bottom:10px;margin-bottom:34px}
+.sec-h .pno{font-family:var(--f-type);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--red);padding-bottom:8px}
+.sec-title{font-family:var(--f-head);font-weight:400;font-size:clamp(46px,7vw,96px);line-height:.9;margin:0}
+.sec-h p{margin:0;font-style:italic;color:var(--ink2);justify-self:end;text-align:right;max-width:34ch;padding-bottom:6px}
+
+/* menu clippings */
+.clips{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:26px}
+.clip{position:relative}
+.clip-in{background:#FFFEFB;padding:12px 12px 16px;box-shadow:0 1px 0 var(--rule),0 14px 24px -18px rgba(0,0,0,.45);transition:transform .35s var(--e-settle),box-shadow .35s var(--e-ink)}
+.clip:nth-child(1) .clip-in{transform:rotate(-1.2deg)}.clip:nth-child(2) .clip-in{transform:rotate(.8deg)}.clip:nth-child(3) .clip-in{transform:rotate(-.6deg)}.clip:nth-child(4) .clip-in{transform:rotate(1deg)}
+.clip:hover .clip-in{transform:rotate(0) translateY(-8px);box-shadow:0 1px 0 var(--rule),0 26px 34px -20px rgba(0,0,0,.5)}
+.clip .ph{overflow:hidden}
+.clip img{width:100%;aspect-ratio:1;object-fit:cover;transition:transform .6s var(--e-ink)}
+.clip:hover img{transform:scale(1.07)}
+.clip .ck{font-family:var(--f-type);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-top:12px}
+.clip h3{font-family:var(--f-head);font-weight:400;font-size:24px;line-height:1.05;margin:4px 0 6px}
+.clip p{margin:0;font-size:15px;color:var(--ink2);min-height:2.8em}
+.clip-f{display:flex;justify-content:space-between;align-items:center;margin-top:12px;border-top:1px solid var(--rule);padding-top:10px}
+.clip-f b{font-family:var(--f-type);font-size:17px}
+.add{font-family:var(--f-type);font-weight:700;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;border:1.5px solid var(--ink);padding:7px 11px;transition:background .2s,color .2s}
+.add:hover{background:var(--ink);color:var(--paper)}
+.flyer{border-radius:50%;object-fit:cover;box-shadow:0 8px 20px rgba(0,0,0,.35);pointer-events:none}
+
+/* field to fryer — darkroom */
+.field{background:var(--night);color:var(--cream)}
+.field-pin{min-height:100vh;display:flex;flex-direction:column;justify-content:center;gap:30px;padding-block:56px;background:radial-gradient(ellipse 60% 70% at 12% 0%,rgba(179,38,30,.32),transparent 70%),radial-gradient(ellipse 50% 50% at 95% 100%,rgba(179,38,30,.14),transparent 70%),var(--night);overflow:hidden}
+.field-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:end}
+.field-head .pno{font-family:var(--f-type);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#F08B83}
+.field-head h2{font-family:var(--f-head);font-weight:400;font-size:clamp(42px,6vw,82px);line-height:.92;margin:6px 0 10px}
+.field-head p{margin:0;font-style:italic;color:#B9B2A7}
+.gauges{display:flex;gap:22px;align-items:center}
+.gauges svg{display:block}
+.readout{display:grid;gap:10px;font-family:var(--f-type);text-transform:uppercase;letter-spacing:.12em;font-size:11px;color:#B9B2A7}
+.readout b{display:block;font-size:30px;letter-spacing:.02em;color:var(--cream);font-variant-numeric:tabular-nums;line-height:1}
+.readout .hot{color:#FF8E6E}
+.field-track{display:flex;gap:30px;padding-inline:clamp(16px,3vw,40px);overflow-x:auto;scrollbar-width:thin}
+.fpanel{flex:0 0 min(430px,78vw);display:grid;gap:10px;align-content:start}
+.fpanel .ph{position:relative;overflow:hidden;background:#000}
+.fpanel img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.fpanel img.engd{object-fit:contain;background:transparent;filter:invert(1);mix-blend-mode:screen;padding:14px}
+.fpanel .t{display:flex;align-items:baseline;gap:14px}
+.fpanel .t b{font-family:var(--f-head);font-weight:400;font-size:52px;line-height:1;color:var(--cream)}
+.fpanel .t span{font-family:var(--f-type);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#F08B83}
+.fpanel p{margin:0;color:#CFC8BC;font-size:16px}
+.field .pin{box-shadow:0 0 0 2px var(--night)}
+
+/* sauces — classifieds */
+.ads-wrap{position:relative}
+.ads{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;perspective:900px}
+.ad{border:1px solid var(--ink);padding:16px 18px;background:var(--paper);display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;transform-style:preserve-3d;will-change:transform}
+.ad .k{font-family:var(--f-type);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--red)}
+.ad h3{font-family:var(--f-head);font-weight:400;font-size:24px;margin:4px 0 4px;line-height:1.05}
+.ad p{margin:0;font-size:15px;color:#3b3732}
+.ad img{width:76px;height:76px;object-fit:cover}
+.ad img.eng{object-fit:contain}
+.ad.hl{background:var(--ink);color:var(--paper)}
+.ad.hl p{color:#D9D4CB}
+.ad.hl .k{color:#F08B83}
+.ad .ad-hand{width:86px;height:auto;object-fit:contain;filter:invert(1);mix-blend-mode:screen;transform:scaleX(-1)}
+
+/* soir */
+.soir{position:relative;background:var(--night);color:var(--cream);overflow:hidden;padding-block:90px}
+.soir-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.32;filter:saturate(.9)}
+.soir::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(22,20,18,.2),rgba(22,20,18,.85) 75%);z-index:1}
+.soir .in{position:relative;z-index:2;display:grid;justify-items:center}
+.frame{position:relative;padding:44px clamp(24px,6vw,80px) 40px;text-align:center;border:1px solid rgba(244,162,58,.35);border-radius:14px;background:rgba(22,20,18,.55);max-width:760px;width:100%}
+.bulbs{position:absolute;inset:-6px;pointer-events:none}
+.bulbs i{position:absolute;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:#5a3d18;animation:chase 1.2s linear infinite}
+@keyframes chase{0%,30%{background:#FFE3A1;box-shadow:0 0 10px 3px rgba(255,190,90,.75)}33.4%,100%{background:#5a3d18;box-shadow:none}}
+.soir-k{font-family:var(--f-type);font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:#E3C27A}
+.soir-script{font-family:var(--f-script);font-weight:400;font-size:clamp(64px,11vw,128px);line-height:1.05;margin:6px 0 10px;color:#FFE7B8;transform:rotate(-4deg);text-shadow:1px 1px 0 #F4A23A,2px 2px 0 #E08A2E,3px 3px 0 #C46A35,4px 4px 0 #A65528,5px 5px 0 #7E3C1C,6px 6px 0 #5A2A14,0 0 34px rgba(255,190,90,.55)}
+.frame p{margin:0 auto;font-style:italic;font-size:19px;color:#E4DCCD}
+.cd{display:grid;gap:4px;margin:22px 0 22px;font-family:var(--f-type);text-transform:uppercase;letter-spacing:.2em;font-size:12px;color:#B9B2A7}
+.cd-v{font-size:clamp(34px,5vw,54px);letter-spacing:.08em;color:var(--cream);font-variant-numeric:tabular-nums}
+.btn-amber{display:inline-block;background:linear-gradient(180deg,#FFC66B,#F4A23A 52%,#D9822A);color:#2A0E0C;font-family:var(--f-type);font-weight:700;font-size:13px;letter-spacing:.16em;text-transform:uppercase;padding:13px 26px;border-radius:99px;text-decoration:none;box-shadow:0 0 26px rgba(244,162,58,.5),inset 0 2px 0 rgba(255,255,255,.55);transition:box-shadow .3s,transform .3s var(--e-settle)}
+.btn-amber:hover{transform:translateY(-2px);box-shadow:0 0 40px rgba(244,162,58,.75),inset 0 2px 0 rgba(255,255,255,.55)}
+.soir .pin{box-shadow:0 0 0 2px var(--night)}
+
+/* locations */
+.loc{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:44px;align-items:start}
+.loc .ph{overflow:hidden}
+.loc .ph img{width:100%;aspect-ratio:4/4.4;object-fit:cover}
+.addr{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.addr li{display:grid;grid-template-columns:1fr auto;gap:6px 18px;padding:18px 0;border-bottom:1px solid var(--rule)}
+.addr li:first-child{border-top:1px solid var(--ink)}
+.addr h3{font-family:var(--f-head);font-weight:400;font-size:28px;margin:0;line-height:1}
+.addr p{margin:0;grid-column:1;color:#3b3732}
+.addr .st{grid-row:1 / span 2;grid-column:2;align-self:center;font-family:var(--f-type);font-size:11px;letter-spacing:.14em;text-transform:uppercase;border:1px solid currentColor;padding:4px 8px}
+.addr .st.open{color:#2F6B3A}
+.addr .st.soon{color:var(--red)}
+.loc-side{position:relative}
+.loc-eiffel{display:block;width:150px;margin:28px 0 0 auto}
+
+/* footer fold */
+.foot-wrap{perspective:1400px;background:var(--paper)}
+.fold{background:var(--ink);color:var(--paper);transform-origin:50% 100%;padding-block:56px 40px}
+.fold-top{display:grid;grid-template-columns:minmax(0,1.3fr) repeat(2,minmax(0,1fr));gap:36px;align-items:start}
+.fold-logo{font-family:var(--f-head);font-size:clamp(64px,10vw,130px);line-height:.9;letter-spacing:.04em;background:var(--gold) center/cover;-webkit-background-clip:text;background-clip:text;color:transparent}
+.fold p{color:#CFC8BC;margin:8px 0 0}
+.fold h4{font-family:var(--f-type);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#F08B83;margin:0 0 10px;font-weight:400}
+.fold ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.fold a{color:var(--paper);text-decoration:none}
+.nl{display:flex;margin-top:14px;border-bottom:1px solid #6A655E}
+.nl input{flex:1;min-width:0;background:transparent;border:0;color:var(--paper);font:16px var(--f-body);padding:8px 0}
+.nl input::placeholder{color:#8C867D}
+.nl button{font:700 11px var(--f-type);letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
+.fold-end{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:40px;padding-top:16px;border-top:1px solid #3a3734;font-family:var(--f-type);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9d978e}
+.reprint{display:inline-flex;align-items:center;gap:10px;color:var(--paper);font-family:var(--f-type);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.reprint img{width:48px;filter:invert(1);mix-blend-mode:screen;transform:scaleX(-1) rotate(-90deg)}
+.fold .pin{box-shadow:0 0 0 2px var(--ink)}
+
+/* receipt dock */
+.rc-dock{position:sticky;bottom:env(safe-area-inset-bottom,0px);height:0;z-index:45}
+.rc{position:absolute;right:16px;bottom:16px;width:220px;display:grid;justify-items:center}
+.rc-paper{width:184px;background:#FFFEFB;font-family:var(--f-type);font-size:11.5px;color:var(--ink);padding:12px 12px 10px;box-shadow:0 6px 18px rgba(0,0,0,.18);clip-path:polygon(0 4px,4% 0,8% 4px,12% 0,16% 4px,20% 0,24% 4px,28% 0,32% 4px,36% 0,40% 4px,44% 0,48% 4px,52% 0,56% 4px,60% 0,64% 4px,68% 0,72% 4px,76% 0,80% 4px,84% 0,88% 4px,92% 0,96% 4px,100% 0,100% 100%,0 100%)}
+.rc-paper h5{margin:4px 0 6px;font-size:11px;letter-spacing:.14em;text-align:center;font-weight:700}
+.rc-lines{list-style:none;margin:0;padding:6px 0;border-block:1px dashed #9d978e;display:grid}
+.rc-lines li{display:flex;justify-content:space-between;gap:6px;overflow:hidden;line-height:1.6}
+.rc-empty{color:#8C867D;font-style:italic;line-height:1.4;padding:2px 0}
+.rc-total{display:flex;justify-content:space-between;margin-top:6px;font-weight:700}
+.rc-printer{width:220px;background:linear-gradient(180deg,#2b2926,#161412);border-radius:10px 10px 14px 14px;padding:10px 12px 12px;display:flex;align-items:center;justify-content:space-between;color:var(--cream);font-family:var(--f-type);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;box-shadow:0 12px 26px -10px rgba(0,0,0,.55);position:relative}
+.rc-printer::before{content:"";position:absolute;left:14px;right:14px;top:-3px;height:6px;border-radius:3px;background:#000}
+.rc-printer b{background:var(--red);color:#fff;border-radius:99px;min-width:20px;height:20px;display:inline-grid;place-items:center;font-size:11px;margin-left:6px}
+.rc-pay{font:700 10.5px var(--f-type);letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
+.rc .pin{left:-12px;top:-12px}
+
+/* ink cursor */
+.ink-cursor{position:fixed;left:0;top:0;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:var(--red);pointer-events:none;z-index:1000;opacity:0;visibility:hidden;display:grid;place-items:center;transition:width .25s var(--e-ink),height .25s var(--e-ink),margin .25s var(--e-ink)}
+.ink-cursor::after{content:attr(data-label);font:700 10px var(--f-type);letter-spacing:.12em;text-transform:uppercase;color:#fff;opacity:0;transition:opacity .2s}
+.ink-cursor.big{width:76px;height:76px;margin:-38px 0 0 -38px}
+.ink-cursor.big::after{opacity:1}
+
+/* ================= DOC: lab, tokens, spec ================= */
+.dsec{padding-top:88px}
+.dsec-h{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:20px 48px;align-items:end;margin-bottom:26px}
+.dsec-h h2{margin:6px 0 0;font-weight:400;font-size:clamp(30px,4.2vw,48px);line-height:1.05}
+.dsec-h p{margin:0;color:#3a352f}
+.lab{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:28px;align-items:start}
+.stage{position:relative;aspect-ratio:16/10.5;border-radius:8px;overflow:hidden;background:#cfcac0;box-shadow:0 0 0 1px rgba(0,0,0,.08),0 30px 50px -30px rgba(40,25,10,.5);perspective:1600px}
+.tp{position:absolute;inset:0;background:var(--paper);color:var(--ink);padding:4% 5%;backface-visibility:hidden;font-family:var(--f-body);overflow:hidden}
+.tp-b{visibility:hidden;opacity:0}
+.tp-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.05),rgba(0,0,0,.55));opacity:0;pointer-events:none}
+.tp .t1{display:flex;justify-content:space-between;font:clamp(7px,1vw,10px) var(--f-type);letter-spacing:.1em;text-transform:uppercase;border-block:1px solid var(--ink);padding-block:4px}
+.tp .lg{font-family:var(--f-head);font-size:clamp(40px,8vw,84px);line-height:.95;text-align:center;letter-spacing:.05em;background:var(--gold) center/cover;-webkit-background-clip:text;background-clip:text;color:transparent;margin-top:2%}
+.tp .nv{border-top:4px double var(--ink);border-bottom:1px solid var(--ink);text-align:center;font:clamp(7px,1vw,10px) var(--f-type);letter-spacing:.14em;text-transform:uppercase;padding-block:4px;margin-top:2%}
+.tp .g{display:grid;grid-template-columns:1fr 2fr 1fr;gap:3%;margin-top:3%}
+.tp .g p{margin:0;font-size:clamp(7px,1vw,11px);line-height:1.35;text-align:justify}
+.tp .h{font-family:var(--f-head);font-size:clamp(16px,2.6vw,28px);line-height:1;text-align:center;margin:0 0 4%}
+.tp .g img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:50% 78%}
+.tp .side img{width:100%;aspect-ratio:1;object-fit:cover;filter:grayscale(1)}
+.tp-b .mh{display:flex;align-items:end;justify-content:space-between;border-bottom:5px double var(--ink);padding-bottom:2%}
+.tp-b .mh b{font-family:var(--f-head);font-weight:400;font-size:clamp(34px,6vw,64px);line-height:.9}
+.tp-b .mh span{font:clamp(7px,1vw,10px) var(--f-type);letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+.tp-b .cl{display:grid;grid-template-columns:repeat(4,1fr);gap:3%;margin-top:5%}
+.tp-b .cl div{background:#fff;padding:5%;box-shadow:0 8px 14px -10px rgba(0,0,0,.4)}
+.tp-b .cl img{width:100%;aspect-ratio:1;object-fit:cover}
+.tp-b .cl b{display:block;font-family:var(--f-head);font-weight:400;font-size:clamp(9px,1.4vw,15px);margin-top:6%}
+.tp-b .cl span{font:clamp(7px,1vw,10px) var(--f-type)}
+.tp-ink-wrap{position:absolute;inset:-4%;filter:url(#rough);pointer-events:none;z-index:5}
+.tp-ink{position:absolute;inset:0;background:var(--ink);visibility:hidden}
+.tp-roller{position:absolute;left:-2%;right:-2%;top:0;height:22px;margin-top:-11px;background:linear-gradient(180deg,#0b0a09,#4a4744 30%,#a29e98 45%,#3a3836 70%,#0b0a09);z-index:6;visibility:hidden;box-shadow:0 10px 20px rgba(0,0,0,.35)}
+.tp-strip{position:absolute;top:0;bottom:0;background:var(--paper);border-right:1px solid var(--rule);z-index:5;visibility:hidden}
+.tbtns{display:grid;gap:10px}
+.tbtn{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;text-align:left;background:var(--doc-card);border:1px solid var(--doc-rule);border-radius:6px;padding:14px 16px;transition:border-color .2s,transform .2s var(--e-settle)}
+.tbtn:hover{border-color:var(--ink);transform:translateX(4px)}
+.tbtn .n{grid-row:1 / span 2;font:700 13px var(--f-type);color:#fff;background:var(--red);width:30px;height:30px;border-radius:50%;display:grid;place-items:center}
+.tbtn b{font-size:18px;font-weight:600}
+.tbtn span{font-size:14.5px;color:var(--doc-mute);line-height:1.35}
+.tbtn.on{border-color:var(--red)}
+
+.tokens{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.tok{background:var(--doc-card);border-radius:6px;padding:16px;display:grid;gap:10px;align-content:start}
+.tok svg{width:100%;height:auto;overflow:visible}
+.tok .tr{position:relative;height:14px;border-bottom:1px solid var(--doc-rule)}
+.tok .tr i{position:absolute;left:0;top:1px;width:12px;height:12px;border-radius:50%;background:var(--red);animation:slide 1.8s infinite alternate;animation-timing-function:var(--e)}
+@keyframes slide{to{left:calc(100% - 12px)}}
+.tok b{font-size:18px;font-weight:600}
+.tok code{font:11.5px var(--f-label);color:var(--doc-mute)}
+.tok p{margin:0;font-size:14.5px;line-height:1.4;color:#3a352f}
+.durs{display:grid;gap:10px;margin-top:22px;background:var(--doc-card);border-radius:6px;padding:18px 20px}
+.dur{display:grid;grid-template-columns:110px 70px 1fr minmax(0,1.2fr);gap:14px;align-items:center;font-size:14.5px}
+.dur b{font-weight:600}
+.dur code{font:12px var(--f-label);color:var(--doc-mute)}
+.dur .bar{height:8px;background:var(--doc-rule);border-radius:99px;overflow:hidden}
+.dur .bar i{display:block;height:100%;width:100%;background:var(--ink);transform-origin:left;animation:fill var(--d) var(--e-ink) infinite alternate}
+@keyframes fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.dur span{color:#3a352f}
+
+.specs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.spec{background:var(--doc-card);border-radius:6px;padding:18px 20px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;scroll-margin-top:80px}
+.spec-n{font:700 13px var(--f-type);color:#fff;background:var(--red);width:34px;height:34px;border-radius:50%;display:grid;place-items:center}
+.spec h3{margin:2px 0 6px;font-weight:600;font-size:20px;line-height:1.2}
+.spec p{margin:0 0 10px;font-size:15.5px;line-height:1.45;color:#2f2b27}
+.spec dl{display:grid;grid-template-columns:auto 1fr;gap:3px 14px;margin:0 0 12px;font-size:13.5px}
+.spec dt{font:11px var(--f-label);letter-spacing:.08em;text-transform:uppercase;color:var(--doc-mute);padding-top:2px}
+.spec dd{margin:0}
+.spec-go{font:12px var(--f-label);letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid currentColor;color:var(--red)}
+
+.notes-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.note{background:var(--doc-card);border-radius:6px;padding:18px 20px}
+.note h3{margin:0 0 8px;font-size:19px;font-weight:600}
+.note ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:15px;line-height:1.45}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:22px;counter-reset:s}
+.steps div{border-top:2px solid var(--ink);padding:12px 16px 0 0;font-size:15px;line-height:1.4;counter-increment:s}
+.steps div::before{content:counter(s);display:block;font:12px var(--f-label);color:var(--red);margin-bottom:4px}
+.steps b{display:block;font-weight:600;font-size:16.5px}
+.credits{margin-top:56px;font-size:13px;color:var(--doc-mute)}
+.credits summary{cursor:pointer}
+.credits ul{columns:2;column-gap:32px;padding-left:18px;margin:10px 0 0}
+.foot{margin-top:28px;padding-block:18px 64px;border-top:1px solid var(--doc-rule);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--doc-mute);font-size:14px}
+
+/* ================= responsive ================= */
+@media (max-width:1000px){
+  .fp-grid{grid-template-columns:1fr 1fr}
+  .fp-lead{grid-column:1 / -1;order:-1;padding-inline:0!important;margin-bottom:28px}
+  .fp-lead::before{display:none}
+  .fp-col{padding-left:0!important}
+  .clips{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ads{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tokens{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .lab{grid-template-columns:minmax(0,1fr)}
+  .mini nav{display:none}
+}
+@media (max-width:760px){
+  body{font-size:16px}
+  .how,.dsec-h,.specs,.notes-grid{grid-template-columns:minmax(0,1fr)}
+  .mast-row{grid-template-columns:1fr}
+  .ear,.ear.r{display:none}
+  .fp-grid{grid-template-columns:minmax(0,1fr)}
+  .fp-grid>*{padding-inline:0!important;margin-bottom:26px}
+  .fp-grid>*+*::before{display:none}
+  .sec-h{grid-template-columns:1fr}
+  .sec-h p{justify-self:start;text-align:left}
+  .clips,.ads{grid-template-columns:minmax(0,1fr)}
+  .field-head{grid-template-columns:1fr}
+  .loc{grid-template-columns:minmax(0,1fr)}
+  .fold-top{grid-template-columns:1fr}
+  .dur{grid-template-columns:90px 60px 1fr}
+  .dur span{grid-column:1 / -1}
+  .steps{grid-template-columns:1fr 1fr;row-gap:20px}
+  .credits ul{columns:1}
+  .dateline>span:not(.dl-type){display:none}
+  .rc{transform:scale(.85);transform-origin:100% 100%}
+}
+@media (max-width:460px){ .tokens{grid-template-columns:minmax(0,1fr)} .steps{grid-template-columns:1fr} }
+@media (prefers-reduced-motion:reduce){
+  .tk-track,.pin,.bulbs i,.tok .tr i,.dur .bar i{animation:none!important}
+  *{transition-duration:.01ms!important}
+}
+</style>
+
+<svg class="defs" aria-hidden="true" focusable="false">
+  <filter id="rough" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="3" seed="11" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="38" xChannelSelector="R" yChannelSelector="G"/></filter>
+</svg>
+
+<!-- ================= COVER ================= -->
+<header class="wrap cover">
+  <div class="cover-meta">
+    <span class="label">GRUFF · Landing page · Direction A, La Gazette</span>
+    <span class="label">Motion &amp; layout</span>
+    <span class="label">For approval</span>
+  </div>
+  <h1>The GRUFF front page, <em>in motion.</em></h1>
+  <p class="lead">This is the homepage as it would ship, running live. Every movement is borrowed from a newspaper: presses, type, ink, stamps, darkrooms and folding paper. Twenty motions are numbered below, with a lab for page transitions and the spec the developers will build from.</p>
+  <div class="how">
+    <div><span class="ic k">↓</span><span><b>Scroll the prototype</b>It starts just below. The page prints itself as you arrive.</span></div>
+    <div><span class="ic">01</span><span><b>Tap any red number</b>Each one replays that animation on the spot.</span></div>
+    <div><span class="ic k">¶</span><span><b>Read the spec after</b>Timing, easing and the reduced-motion fallback for each.</span></div>
+  </div>
+  <nav class="map" aria-label="Motion index">
+    <a href="#m01"><b>01</b>Press start</a><a href="#m02"><b>02</b>Typewriter dateline</a><a href="#m03"><b>03</b>Gold-leaf stamp</a><a href="#m04"><b>04</b>Breaking ticker</a><a href="#m05"><b>05</b>Letterpress headlines</a><a href="#m06"><b>06</b>Halftone print</a><a href="#m07"><b>07</b>Column rules</a><a href="#m08"><b>08</b>Price odometer</a><a href="#m09"><b>09</b>Stamp CTA</a><a href="#m10"><b>10</b>Newsboy</a><a href="#m11"><b>11</b>Mini masthead</a><a href="#m12"><b>12</b>Clipping deal</a><a href="#m13"><b>13</b>Ticket printer</a><a href="#m14"><b>14</b>Darkroom scroll</a><a href="#m15"><b>15</b>Paste-up</a><a href="#m16"><b>16</b>Marquee bulbs</a><a href="#m17"><b>17</b>Developing photo</a><a href="#m18"><b>18</b>Back-page fold</a><a href="#m19"><b>19</b>Ink cursor</a><a href="#m20"><b>20</b>Page transitions</a>
+  </nav>
+</header>
+
+<div class="wrap proto-bar">
+  <div class="left"><span class="label">Prototype</span><span class="chip-url">gruff.fr</span></div>
+  <button class="tog" id="notes-tog" aria-pressed="true"><i></i>Motion numbers</button>
+</div>
+
+<!-- ================= THE SITE ================= -->
+<div class="site notes" id="site">
+
+  <div class="mini" aria-hidden="false"><div class="mini-bar">
+    <div class="in mini-in">
+      <span class="mini-logo">GRUFF</span>
+      <nav><a href="#s-menu" data-cur="Lire">Le Menu</a><a href="#s-field" data-cur="Lire">Du champ</a><a href="#s-sauces" data-cur="Lire">Sauces</a><a href="#s-adresses" data-cur="Lire">Adresses</a></nav>
+      <span class="mini-page">p. <span class="pg">1</span> / 6</span>
+      <a class="mini-cta" href="#s-menu" data-cur="Go">Commander</a>
+    </div>
+    <div class="mini-prog"><i></i></div>
+    <button class="pin" data-r="11" aria-label="Replay motion 11">11</button>
+  </div></div>
+
+  <!-- PAGE 1 · FRONT -->
+  <section class="hero" id="s-front">
+    <div class="intro" hidden>
+      <div class="intro-top"><div class="roller"></div></div>
+      <div class="intro-bot"><div class="roller"></div></div>
+      <div class="intro-count"><span>Impression N° 047</span><b class="intro-n">000</b><small>Scroll to print the edition</small></div>
+    </div>
+    <div class="in">
+      <div class="dateline rel"><span>Vol. I · No. 47</span><span class="dl-type">Paris · Samedi 3 octobre 2026 · 21h40</span><span>Prix&nbsp;: 4,50&nbsp;€</span>
+        <button class="pin" data-r="1" style="left:-8px;top:-34px" aria-label="Replay motion 1">01</button>
+        <button class="pin" data-r="2" style="left:50%;top:-34px" aria-label="Replay motion 2">02</button></div>
+      <div class="mast-row">
+        <div class="ear"><img class="eng" src="assets/gfx-eiffel.jpg" alt=""><span>Paris 9<sup>e</sup><br>Depuis 2026</span></div>
+        <h1 class="mast rel" aria-label="GRUFF"><span class="ml">G</span><span class="ml">R</span><span class="ml">U</span><span class="ml">F</span><span class="ml">F</span><span class="glint" aria-hidden="true">GRUFF</span>
+          <button class="pin" data-r="3" style="right:-14px;top:6px" aria-label="Replay motion 3">03</button></h1>
+        <div class="ear r"><b>Édition du soir</b>Ouvert 17h — 2h<br>Frites fraîches toutes les heures</div>
+      </div>
+      <div class="tagline">Le Journal de la Frite · Rough-cut, double-fried, Paris 9<sup>e</sup></div>
+      <nav class="mainnav"><a href="#s-menu" data-cur="Lire">Le Menu</a><a href="#s-field" data-cur="Lire">Du champ à la friteuse</a><a href="#s-sauces" data-cur="Lire">Sauces</a><a href="#s-adresses" data-cur="Lire">Adresses</a><a class="on" href="#s-menu" data-cur="Go">Commander</a>
+        <button class="pin" data-r="7" style="right:0;top:-13px" aria-label="Replay motion 7">07</button></nav>
+    </div>
+    <div class="ticker" aria-label="Breaking news">
+      <div class="tk-track">
+        <span><b>Extra</b>Truffe &amp; Comté back on the menu tonight</span>
+        <span><b>File</b>Queue at Rue des Martyrs: <em class="q-time">12</em> min</span>
+        <span><b>Météo</b>Cold night, hot frites</span>
+        <span><b>Bourse</b>Bintje +4 % this week</span>
+        <span><b>Dernière</b>Mayo fumée this weekend only</span>
+      </div>
+      <button class="pin" data-r="4" aria-label="Show motion 4">04</button>
+    </div>
+    <div class="in">
+      <div class="fp-grid">
+        <article class="fp-col">
+          <div class="kicker">Interview</div>
+          <h3>“A fry should argue back.”</h3>
+          <img class="chef bw ht" src="assets/chef.jpg" alt="Our head of fry in a white cap">
+          <div class="credit"><span>Our head of fry, before service.</span><span>Photo · Unsplash</span></div>
+          <p class="dropcap">Bintje potatoes from the Nord, cut by hand each morning, rested, blanched at 140°, then finished at 185° to order. Nothing frozen, nothing coated.</p>
+          <a class="cont" href="#s-field" data-cur="Lire"><img class="eng" src="assets/gfx-manicule.jpg" alt="">Suite en page 3</a>
+        </article>
+        <article class="fp-lead rel">
+          <div class="kicker">À la une</div>
+          <h2 class="lp">Rough-Cut Frites Take the Left Bank</h2>
+          <button class="pin" data-r="5" style="left:-6px;top:30px" aria-label="Replay motion 5">05</button>
+          <p class="deck">Double-fried in beef tallow, salted by hand and served on newsprint. Queues now reach Rue des Martyrs after midnight.</p>
+          <div class="rel"><img class="lead-ph ht" src="assets/lead-fries-newsprint.jpg" alt="Fries with a pot of aïoli, a newspaper behind">
+            <button class="pin" data-r="6" style="left:10px;top:10px" aria-label="Replay motion 6">06</button></div>
+          <div class="credit"><span>La Classique with aïoli, at the Paris 9<sup>e</sup> counter.</span><span>Photo · Logan Weaver / Unsplash</span></div>
+        </article>
+        <aside class="fp-menu rel">
+          <div class="kicker">Le Menu du Jour</div>
+          <button class="pin" data-r="8" style="right:-6px;top:30px" aria-label="Replay motion 8">08</button>
+          <ul>
+            <li><img src="assets/menu-classique.jpg" alt=""><div><div class="row"><span>La Classique</span><i class="ldr"></i><b class="odo" data-v="4,50">4,50</b></div><em>Sea salt, beef tallow</em></div></li>
+            <li><img src="assets/menu-truffe.jpg" alt=""><div><div class="row"><span>Truffe &amp; Comté</span><i class="ldr"></i><b class="odo" data-v="7,90">7,90</b></div><em>Black truffle, aged Comté</em></div></li>
+            <li><img src="assets/menu-poivre.jpg" alt=""><div><div class="row"><span>Poivre Noir</span><i class="ldr"></i><b class="odo" data-v="5,20">5,20</b></div><em>Cracked Kampot pepper</em></div></li>
+            <li><img src="assets/menu-grande.jpg" alt=""><div><div class="row"><span>La Grande</span><i class="ldr"></i><b class="odo" data-v="9,50">9,50</b></div><em>Sharing tray, four sauces</em></div></li>
+          </ul>
+          <div class="order">
+            <div class="stamp-wrap"><button class="stamp" data-cur="Tamponner">Commander<small>Click &amp; collect · 12 min</small></button><span class="stamp-ring"></span>
+              <button class="pin" data-r="9" style="right:-20px;top:-16px" aria-label="Replay motion 9">09</button></div>
+            <div class="boy" data-cur="Extra!"><span class="bubble">Extra! Extra!</span><img class="eng" src="assets/gfx-newsboy.jpg" alt="Engraving of a newsboy">
+              <button class="pin" data-r="10" style="right:-6px;bottom:-6px" aria-label="Replay motion 10">10</button></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 2 · MENU -->
+  <section class="sec" id="s-menu">
+    <div class="in">
+      <div class="sec-h rel"><span class="pno">Page 2</span><h2 class="sec-title">Le Menu</h2><p>Four cuts, one oil, no shortcuts. Every cone is fried to order.</p>
+        <button class="pin" data-r="12" style="left:-8px;top:-30px" aria-label="Replay motion 12">12</button></div>
+      <div class="clips">
+        <article class="clip" data-name="La Classique" data-price="4.5"><div class="clip-in">
+          <div class="ph"><img class="ht" src="assets/menu-classique.jpg" alt="Fries in a black paper cone"></div>
+          <div class="ck">Best-seller</div><h3>La Classique</h3><p>Sea salt, beef tallow, served in a cone.</p>
+          <div class="clip-f"><b>4,50 €</b><button class="add" data-cur="Ajouter">Ajouter +</button></div>
+          <button class="pin" data-r="13" style="right:-10px;top:-10px" aria-label="Replay motion 13">13</button>
+        </div></article>
+        <article class="clip" data-name="Truffe &amp; Comté" data-price="7.9"><div class="clip-in">
+          <div class="ph"><img class="ht" src="assets/menu-truffe.jpg" alt="Seasoned fries in a paper-lined basket"></div>
+          <div class="ck">Prestige</div><h3>Truffe &amp; Comté</h3><p>Black truffle, Comté aged 24 months.</p>
+          <div class="clip-f"><b>7,90 €</b><button class="add" data-cur="Ajouter">Ajouter +</button></div>
+        </div></article>
+        <article class="clip" data-name="Poivre Noir" data-price="5.2"><div class="clip-in">
+          <div class="ph"><img class="ht" src="assets/menu-poivre.jpg" alt="Fries on brown paper with ketchup"></div>
+          <div class="ck">Piquant</div><h3>Poivre Noir</h3><p>Cracked Kampot pepper, flaky salt.</p>
+          <div class="clip-f"><b>5,20 €</b><button class="add" data-cur="Ajouter">Ajouter +</button></div>
+        </div></article>
+        <article class="clip" data-name="La Grande" data-price="9.5"><div class="clip-in">
+          <div class="ph"><img class="ht" src="assets/menu-grande.jpg" alt="Trays of fries with pots of sauce"></div>
+          <div class="ck">À partager</div><h3>La Grande</h3><p>Sharing tray with four sauces.</p>
+          <div class="clip-f"><b>9,50 €</b><button class="add" data-cur="Ajouter">Ajouter +</button></div>
+        </div></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 3 · FIELD TO FRYER -->
+  <section class="field" id="s-field">
+    <div class="field-pin">
+      <div class="in field-head rel" style="width:100%">
+        <div><span class="pno">Page 3 · Reportage</span><h2>From field to fryer</h2><p>One day in the life of a GRUFF frite. Keep scrolling: the clock and the oil follow you.</p></div>
+        <div class="gauges">
+          <svg width="112" height="112" viewBox="0 0 120 120" aria-hidden="true">
+            <circle cx="60" cy="60" r="55" fill="none" stroke="#F1EEE7" stroke-width="2"/>
+            <circle cx="60" cy="60" r="49" fill="none" stroke="#F1EEE7" stroke-width=".6" opacity=".5"/>
+            <g stroke="#F1EEE7" stroke-width="2"><line x1="60" y1="8" x2="60" y2="16"/><line x1="60" y1="104" x2="60" y2="112"/><line x1="8" y1="60" x2="16" y2="60"/><line x1="104" y1="60" x2="112" y2="60"/></g>
+            <g stroke="#F1EEE7" stroke-width="1" opacity=".7"><line x1="86" y1="15" x2="83" y2="20"/><line x1="105" y1="34" x2="100" y2="37"/><line x1="105" y1="86" x2="100" y2="83"/><line x1="86" y1="105" x2="83" y2="100"/><line x1="34" y1="105" x2="37" y2="100"/><line x1="15" y1="86" x2="20" y2="83"/><line x1="15" y1="34" x2="20" y2="37"/><line x1="34" y1="15" x2="37" y2="20"/></g>
+            <line class="hand-h" x1="60" y1="60" x2="60" y2="30" stroke="#F1EEE7" stroke-width="4" stroke-linecap="round" transform="rotate(180 60 60)"/>
+            <line class="hand-m" x1="60" y1="60" x2="60" y2="16" stroke="#E0574D" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="60" cy="60" r="4" fill="#E0574D"/>
+          </svg>
+          <svg width="40" height="112" viewBox="0 0 40 120" aria-hidden="true">
+            <rect x="14" y="6" width="12" height="94" rx="6" fill="none" stroke="#F1EEE7" stroke-width="2"/>
+            <rect class="merc" x="17" y="12" width="6" height="90" fill="#E0574D" style="transform-origin:20px 102px;transform:scaleY(.1)"/>
+            <circle cx="20" cy="104" r="11" fill="#E0574D" stroke="#F1EEE7" stroke-width="2"/>
+            <g stroke="#F1EEE7" stroke-width="1"><line x1="28" y1="40" x2="34" y2="40"/><line x1="28" y1="24" x2="34" y2="24"/></g>
+          </svg>
+          <div class="readout"><span>Heure<b class="ro-h">06h00</b></span><span>Huile<b class="ro-t">20°</b></span></div>
+        </div>
+        <button class="pin" data-r="14" style="left:6px;top:-30px" aria-label="Show motion 14">14</button>
+      </div>
+      <div class="field-track">
+        <article class="fpanel"><div class="ph"><img class="engd" src="assets/gfx-potato-plant.jpg" alt="Engraving of a potato plant"></div><div class="t"><b>06h</b><span>La récolte</span></div><p>Bintje potatoes are lifted in the Nord, where the soil is sandy and the nights are cold.</p></article>
+        <article class="fpanel"><div class="ph"><img class="dev" src="assets/potatoes.jpg" alt="A pile of yellow potatoes"></div><div class="t"><b>08h</b><span>L'arrivage</span></div><p>Two deliveries a week reach the kitchen in Paris 9<sup>e</sup>. Nothing waits longer than four days.</p></article>
+        <article class="fpanel"><div class="ph"><img class="dev bw" src="assets/chef.jpg" alt="A cook in a white cap looking down"></div><div class="t"><b>10h</b><span>La taille</span></div><p>Cut by hand to 11 mm, rinsed twice and left to rest so the starch settles.</p></article>
+        <article class="fpanel"><div class="ph"><img class="dev" src="assets/sauce-dip.jpg" alt="A fry dipped in pink sauce"></div><div class="t"><b>13h</b><span>Les sauces</span></div><p>Aïoli, béarnaise and mayo fumée are made the same day. Ketchup arrives in a bottle.</p></article>
+        <article class="fpanel"><div class="ph"><img class="dev" src="assets/fryer-basket.jpg" alt="A frying basket of fries lifted from the oil" style="object-position:50% 30%"></div><div class="t"><b>17h</b><span>Blanchies à 140°</span></div><p>The first fry cooks the inside soft. Then the fries rest again, until you order.</p></article>
+        <article class="fpanel"><div class="ph"><img class="dev" src="assets/fries-oil.jpg" alt="Fries bubbling in hot oil"></div><div class="t"><b>21h</b><span>Finies à 185°</span></div><p>Ninety seconds in beef tallow for the crust. Salted by hand, wrapped in newsprint, handed over.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 4 · SAUCES -->
+  <section class="sec" id="s-sauces">
+    <div class="in">
+      <div class="sec-h rel"><span class="pno">Page 4</span><h2 class="sec-title">Petites annonces</h2><p>Our sauces, listed the only way a newspaper knows how.</p>
+        <button class="pin" data-r="15" style="left:-8px;top:-30px" aria-label="Replay motion 15">15</button></div>
+      <div class="ads-wrap">
+        <div class="ads">
+          <div class="ad"><div><span class="k">Wanted</span><h3>Aïoli au citron</h3><p>Garlic, Menton lemon. Seeks a crisp companion. 1,50 €</p></div><img src="assets/sauce-dip.jpg" alt=""></div>
+          <div class="ad"><div><span class="k">For sale</span><h3>Béarnaise maison</h3><p>Tarragon, shallot, clarified butter. 1,50 €</p></div></div>
+          <div class="ad hl"><div><span class="k">Notice</span><h3>Mayo fumée</h3><p>Smoked over beechwood. Weekends only. 1,80 €</p></div><img class="ad-hand" src="assets/gfx-manicule.jpg" alt=""></div>
+          <div class="ad"><div><span class="k">Situation vacant</span><h3>Andalouse</h3><p>Pepper, tomato, a little heat. 1,50 €</p></div><img class="eng" src="assets/gfx-utensils.jpg" alt=""></div>
+          <div class="ad"><div><span class="k">Lost &amp; found</span><h3>Ketchup</h3><p>Available on request. We don't judge. 0,80 €</p></div></div>
+          <div class="ad"><div><span class="k">Personal</span><h3>Moutarde à l'ancienne</h3><p>Grainy, Dijon, looking for La Classique.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 5 · SOIR -->
+  <section class="soir" id="s-soir">
+    <img class="soir-bg" src="assets/night-cafe.jpg" alt="">
+    <div class="in">
+      <div class="frame">
+        <div class="bulbs" aria-hidden="true"></div>
+        <div class="soir-k">Édition du soir · <span class="soir-state">Ouvert ce soir</span></div>
+        <h2 class="soir-script">Ce soir</h2>
+        <p>The fryer is hot from 17h. Last orders at 1h45, served under the streetlamps.</p>
+        <div class="cd"><span class="cd-l">Fermeture dans</span><span class="cd-v">04:20:00</span></div>
+        <a class="btn-amber" href="#s-menu" data-cur="Go">Réserver mon cornet</a>
+        <button class="pin" data-r="16" style="right:-12px;top:-12px" aria-label="Replay motion 16">16</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 6 · ADRESSES -->
+  <section class="sec" id="s-adresses">
+    <div class="in">
+      <div class="sec-h"><span class="pno">Page 6</span><h2 class="sec-title">Adresses</h2><p>Three counters, all within walking distance of a métro.</p></div>
+      <div class="loc">
+        <div class="ph rel"><img class="dev bw" src="assets/paris-storefront.jpg" alt="A Paris storefront with a striped awning">
+          <button class="pin" data-r="17" style="left:10px;top:10px" aria-label="Replay motion 17">17</button></div>
+        <div class="loc-side">
+          <ul class="addr">
+            <li><h3>Paris 9<sup>e</sup> · Martyrs</h3><p>Rue des Martyrs · 17h — 2h</p><span class="st open">Ouvert</span></li>
+            <li><h3>Paris 11<sup>e</sup> · Oberkampf</h3><p>Rue Oberkampf · 18h — 2h</p><span class="st open">Ouvert</span></li>
+            <li><h3>Paris 6<sup>e</sup> · Odéon</h3><p>Carrefour de l'Odéon · opening spring 2027</p><span class="st soon">Bientôt</span></li>
+          </ul>
+          <img class="loc-eiffel eng" src="assets/gfx-eiffel.jpg" alt="">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BACK PAGE -->
+  <div class="foot-wrap">
+    <footer class="fold rel">
+      <div class="in">
+        <div class="fold-top">
+          <div><div class="fold-logo">GRUFF</div><p>Le Journal de la Frite. Printed nightly in Paris.</p></div>
+          <div><h4>Sections</h4><ul><li><a href="#s-menu">Le Menu</a></li><li><a href="#s-field">Du champ à la friteuse</a></li><li><a href="#s-sauces">Sauces</a></li><li><a href="#s-adresses">Adresses</a></li></ul></div>
+          <div><h4>L'édition du soir, par e-mail</h4><p>One letter a week: new cuts, late openings, no spam.</p>
+            <form class="nl" id="nl"><input id="nl-email" type="email" placeholder="votre@email.fr" aria-label="Email address"><button type="submit">S'abonner</button></form></div>
+        </div>
+        <div class="fold-end"><span>Fin de l'édition · Demain, même heure</span><button class="reprint" id="reprint" data-cur="Réimprimer"><img src="assets/gfx-manicule.jpg" alt="">Réimprimer l'édition</button></div>
+      </div>
+      <button class="pin" data-r="18" style="right:16px;top:16px" aria-label="Show motion 18">18</button>
+    </footer>
+  </div>
+
+  <div class="rc-dock"><div class="rc" aria-live="polite">
+    <div class="rc-paper"><h5>GRUFF · TICKET N° 047</h5><ul class="rc-lines"></ul><div class="rc-empty">Empty for now. Tap "Ajouter" on any dish.</div><div class="rc-total"><span>Total</span><b>0,00 €</b></div></div>
+    <div class="rc-printer"><span>Ma commande<b class="rc-count">0</b></span><button class="rc-pay" data-cur="Payer">Payer →</button></div>
+  </div></div>
+  <div class="ink-cursor" aria-hidden="true"></div>
+</div>
+
+<!-- ================= TRANSITIONS LAB ================= -->
+<section class="wrap dsec" id="m20" aria-labelledby="lab-h">
+  <div class="dsec-h">
+    <div><span class="label">Motion 20 · Page transitions</span><h2 id="lab-h">Four ways to turn the page</h2></div>
+    <p>Moving between pages should feel like handling a newspaper. Each transition belongs to a type of navigation, so people learn what kind of move they just made.</p>
+  </div>
+  <div class="lab">
+    <div class="stage" id="stage">
+      <div class="tp tp-a">
+        <div class="t1"><span>Vol. I · No. 47</span><span>Paris</span><span>4,50 €</span></div>
+        <div class="lg">GRUFF</div>
+        <div class="nv">Le Menu · Sauces · Adresses · Commander</div>
+        <div class="g">
+          <div class="side"><img src="assets/chef.jpg" alt=""><p style="margin-top:6%">Bintje potatoes from the Nord, cut by hand each morning.</p></div>
+          <div><p class="h">Rough-Cut Frites Take the Left Bank</p><img src="assets/lead-fries-newsprint.jpg" alt=""></div>
+          <div><p>La Classique ........ 4,50</p><p>Truffe &amp; Comté .... 7,90</p><p>Poivre Noir ........ 5,20</p><p>La Grande .......... 9,50</p></div>
+        </div>
+        <div class="tp-shade"></div>
+      </div>
+      <div class="tp tp-b">
+        <div class="mh"><b>Le Menu</b><span>Page 2</span></div>
+        <div class="cl">
+          <div><img src="assets/menu-classique.jpg" alt=""><b>La Classique</b><span>4,50 €</span></div>
+          <div><img src="assets/menu-truffe.jpg" alt=""><b>Truffe &amp; Comté</b><span>7,90 €</span></div>
+          <div><img src="assets/menu-poivre.jpg" alt=""><b>Poivre Noir</b><span>5,20 €</span></div>
+          <div><img src="assets/menu-grande.jpg" alt=""><b>La Grande</b><span>9,50 €</span></div>
+        </div>
+        <div class="tp-shade"></div>
+      </div>
+      <div class="tp-ink-wrap"><div class="tp-ink"></div></div>
+      <div class="tp-roller"></div>
+    </div>
+    <div class="tbtns">
+      <button class="tbtn" data-t="turn"><span class="n">A</span><b>Page turn</b><span>The page lifts from the spine and turns. For moving forward through main sections: Home → Menu → Story.</span></button>
+      <button class="tbtn" data-t="blot"><span class="n">B</span><b>Ink blot</b><span>Ink floods from where you tapped, then drains to reveal the new page. For checkout and the order flow.</span></button>
+      <button class="tbtn" data-t="roll"><span class="n">C</span><b>Press roll</b><span>A roller passes down the page and prints the next one behind it. For articles and long-form stories.</span></button>
+      <button class="tbtn" data-t="cols"><span class="n">D</span><b>Column cascade</b><span>Columns of fresh paper drop in, then lift away. For filters and switching locations without leaving the page.</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TOKENS ================= -->
+<section class="wrap dsec" aria-labelledby="tok-h">
+  <div class="dsec-h">
+    <div><span class="label">Motion tokens</span><h2 id="tok-h">Four curves, four speeds</h2></div>
+    <p>Every animation uses one of these curves and one of these durations. That keeps twenty different effects feeling like one brand, and gives developers a short list to build from.</p>
+  </div>
+  <div class="tokens">
+    <div class="tok"><svg viewBox="0 -24 100 148" aria-hidden="true"><path d="M0 100 H100 M0 0 H100" stroke="#CFCAC0" stroke-width=".8"/><path d="M0 100 C76 100 24 0 100 0" fill="none" stroke="#1A1A1A" stroke-width="2.4"/></svg><div class="tr"><i style="--e:var(--e-press)"></i></div><b>Press</b><code>cubic-bezier(.76, 0, .24, 1)</code><p>Heavy start and stop, like machinery. Rollers, page turns, rules drawing.</p></div>
+    <div class="tok"><svg viewBox="0 -24 100 148" aria-hidden="true"><path d="M0 100 H100 M0 0 H100" stroke="#CFCAC0" stroke-width=".8"/><path d="M0 100 C33 0 68 0 100 0" fill="none" stroke="#1A1A1A" stroke-width="2.4"/></svg><div class="tr"><i style="--e:var(--e-ink)"></i></div><b>Ink</b><code>cubic-bezier(.33, 1, .68, 1)</code><p>Fast spread that slows as it soaks in. Reveals, hovers, cursor.</p></div>
+    <div class="tok"><svg viewBox="0 -24 100 148" aria-hidden="true"><path d="M0 100 H100 M0 0 H100" stroke="#CFCAC0" stroke-width=".8"/><path d="M0 100 C34 -56 64 0 100 0" fill="none" stroke="#1A1A1A" stroke-width="2.4"/></svg><div class="tr"><i style="--e:var(--e-settle)"></i></div><b>Settle</b><code>cubic-bezier(.34, 1.56, .64, 1)</code><p>Slight overshoot, then rest. Type being set, clippings landing.</p></div>
+    <div class="tok"><svg viewBox="0 -24 100 148" aria-hidden="true"><path d="M0 100 H100 M0 0 H100" stroke="#CFCAC0" stroke-width=".8"/><path d="M0 100 C70 100 84 100 100 0" fill="none" stroke="#1A1A1A" stroke-width="2.4"/></svg><div class="tr"><i style="--e:var(--e-slam)"></i></div><b>Slam</b><code>cubic-bezier(.7, 0, .84, 0)</code><p>Accelerates into impact. Used only for stamps.</p></div>
+  </div>
+  <div class="durs">
+    <div class="dur"><b>Flick</b><code>150 ms</code><div class="bar"><i style="--d:150ms"></i></div><span>Hover states, button presses</span></div>
+    <div class="dur"><b>Quick</b><code>300 ms</code><div class="bar"><i style="--d:300ms"></i></div><span>Stamps, menus, small UI changes</span></div>
+    <div class="dur"><b>Paper</b><code>700 ms</code><div class="bar"><i style="--d:700ms"></i></div><span>Reveals, headlines, clippings</span></div>
+    <div class="dur"><b>Press</b><code>1200 ms</code><div class="bar"><i style="--d:1200ms"></i></div><span>Page transitions, the press start</span></div>
+  </div>
+</section>
+
+<!-- ================= SPEC ================= -->
+<section class="wrap dsec" aria-labelledby="spec-h">
+  <div class="dsec-h">
+    <div><span class="label">Motion spec</span><h2 id="spec-h">All twenty, in order of appearance</h2></div>
+    <p>"Show me" scrolls to the motion in the prototype and plays it. Every motion has a reduced-motion version for visitors who have turned animation down on their device.</p>
+  </div>
+  <div class="specs">
+    <article class="spec" id="m01"><span class="spec-n">01</span><div><h3>Press start</h3><p>A black printing plate covers the front page and counts up to 100%. The plate then splits and rolls away like press rollers, and the edition prints underneath.</p><dl><dt>Trigger</dt><dd>First view of the page, once per visit</dd><dt>Timing</dt><dd>2.1 s · Press</dd><dt>Reduced</dt><dd>No plate; page shows immediately</dd></dl><button class="spec-go" data-r="1">Show me ▸</button></div></article>
+    <article class="spec" id="m02"><span class="spec-n">02</span><div><h3>Typewriter dateline</h3><p>The real date and time type out in Courier with a blinking red caret, then keep updating.</p><dl><dt>Trigger</dt><dd>As the plate opens</dd><dt>Timing</dt><dd>1.4 s · linear, one letter per step</dd><dt>Reduced</dt><dd>Static text</dd></dl><button class="spec-go" data-r="2">Show me ▸</button></div></article>
+    <article class="spec" id="m03"><span class="spec-n">03</span><div><h3>Gold-leaf stamp</h3><p>Each letter of GRUFF is hot-stamped: it drops in, lands with a jolt, and a glint sweeps across. Afterwards the gold catches the light as the cursor moves.</p><dl><dt>Trigger</dt><dd>After the plate opens; light follows the pointer</dd><dt>Timing</dt><dd>0.9 s stamp + 1.2 s glint · Slam</dd><dt>Reduced</dt><dd>Static gold masthead</dd></dl><button class="spec-go" data-r="3">Show me ▸</button></div></article>
+    <article class="spec" id="m04"><span class="spec-n">04</span><div><h3>Breaking ticker</h3><p>A news line runs under the masthead: specials, live queue time, weekend sauces. It pauses on hover so people can read it.</p><dl><dt>Trigger</dt><dd>Always on</dd><dt>Timing</dt><dd>48 s loop · linear</dd><dt>Reduced</dt><dd>Stopped, first items visible</dd></dl><button class="spec-go" data-r="4">Show me ▸</button></div></article>
+    <article class="spec" id="m05"><span class="spec-n">05</span><div><h3>Letterpress headlines</h3><p>Headline words drop into place one by one like metal type, each slightly tilted before it settles. Section titles rise out of their rule the same way.</p><dl><dt>Trigger</dt><dd>On entering view</dd><dt>Timing</dt><dd>0.8 s, 70 ms between words · Settle</dd><dt>Reduced</dt><dd>Shown immediately</dd></dl><button class="spec-go" data-r="5">Show me ▸</button></div></article>
+    <article class="spec" id="m06"><span class="spec-n">06</span><div><h3>Halftone print</h3><p>Photos print in as halftone dots that grow until they merge into the full image. Color photos start as a black plate and the color comes through last.</p><dl><dt>Trigger</dt><dd>Each photo, on entering view</dd><dt>Timing</dt><dd>1.8 s · Press</dd><dt>Reduced</dt><dd>Photos shown immediately</dd></dl><button class="spec-go" data-r="6">Show me ▸</button></div></article>
+    <article class="spec" id="m07"><span class="spec-n">07</span><div><h3>Column rules</h3><p>Vertical rules draw down between columns, and the double rule under the masthead extends out from the center.</p><dl><dt>Trigger</dt><dd>As the front page prints</dd><dt>Timing</dt><dd>1.2 s · Press</dd><dt>Reduced</dt><dd>Static rules</dd></dl><button class="spec-go" data-r="7">Show me ▸</button></div></article>
+    <article class="spec" id="m08"><span class="spec-n">08</span><div><h3>Leaders &amp; price odometer</h3><p>Dot leaders run from each dish to its price, then every digit rolls into place like a mechanical counter.</p><dl><dt>Trigger</dt><dd>Menu column enters view</dd><dt>Timing</dt><dd>0.6 s leaders + 1.3 s digits · Ink</dd><dt>Reduced</dt><dd>Static prices</dd></dl><button class="spec-go" data-r="8">Show me ▸</button></div></article>
+    <article class="spec" id="m09"><span class="spec-n">09</span><div><h3>Stamp CTA</h3><p>The "Commander" stamp slams onto the page with a ring of ink and the page jolts. Every click stamps again and leaves a faint impression behind.</p><dl><dt>Trigger</dt><dd>Enters view; on every click</dd><dt>Timing</dt><dd>0.38 s · Slam</dd><dt>Reduced</dt><dd>Static button with hover lift</dd></dl><button class="spec-go" data-r="9">Show me ▸</button></div></article>
+    <article class="spec" id="m10"><span class="spec-n">10</span><div><h3>Newsboy</h3><p>The newsboy engraving runs in from the right, bobbing with each step, and shouts "Extra! Extra!". Tap him to send him running again.</p><dl><dt>Trigger</dt><dd>After the stamp; on tap</dd><dt>Timing</dt><dd>1.5 s · Ink</dd><dt>Reduced</dt><dd>Standing still, bubble shown</dd></dl><button class="spec-go" data-r="10">Show me ▸</button></div></article>
+    <article class="spec" id="m11"><span class="spec-n">11</span><div><h3>Mini masthead</h3><p>Once the big masthead scrolls away, a compact header folds down from the top edge. Its page counter flips as you pass each section, and a red rule shows reading progress.</p><dl><dt>Trigger</dt><dd>Scrolling past the front page</dd><dt>Timing</dt><dd>0.7 s · Settle</dd><dt>Reduced</dt><dd>Appears without the fold</dd></dl><button class="spec-go" data-r="11">Show me ▸</button></div></article>
+    <article class="spec" id="m12"><span class="spec-n">12</span><div><h3>Clipping deal</h3><p>Menu items arrive like clippings tossed onto a table, then straighten. On hover a clipping lifts and its photo leans in.</p><dl><dt>Trigger</dt><dd>Menu page enters view</dd><dt>Timing</dt><dd>0.95 s, 120 ms apart · Settle</dd><dt>Reduced</dt><dd>Static grid</dd></dl><button class="spec-go" data-r="12">Show me ▸</button></div></article>
+    <article class="spec" id="m13"><span class="spec-n">13</span><div><h3>Ticket printer</h3><p>"Ajouter" sends the dish photo flying in an arc into the ticket printer. A new line prints, the paper feeds and the total updates.</p><dl><dt>Trigger</dt><dd>Adding any dish</dd><dt>Timing</dt><dd>0.85 s flight + 0.45 s print</dd><dt>Reduced</dt><dd>Line added, no flight</dd></dl><button class="spec-go" data-r="13">Show me ▸</button></div></article>
+    <article class="spec" id="m14"><span class="spec-n">14</span><div><h3>Darkroom scroll</h3><p>The reportage section pins in place and scrolling moves the story sideways, from harvest at 06h to the final fry at 21h. The clock and the oil thermometer follow the scroll, and each photo develops from overexposed white under a red safelight.</p><dl><dt>Trigger</dt><dd>Scroll-linked</dd><dt>Timing</dt><dd>Follows the scroll</dd><dt>Reduced</dt><dd>Normal sideways scroller, photos sharp</dd></dl><button class="spec-go" data-r="14">Show me ▸</button></div></article>
+    <article class="spec" id="m15"><span class="spec-n">15</span><div><h3>Classified paste-up</h3><p>Sauce ads are pasted onto the page one at a time in random order. A pointing hand slides in toward the weekend special, and each ad tilts toward the cursor.</p><dl><dt>Trigger</dt><dd>Sauces page enters view</dd><dt>Timing</dt><dd>0.7 s, random order · Press</dd><dt>Reduced</dt><dd>Static ads, no tilt</dd></dl><button class="spec-go" data-r="15">Show me ▸</button></div></article>
+    <article class="spec" id="m16"><span class="spec-n">16</span><div><h3>Marquee bulbs</h3><p>Bulbs chase around the evening frame, "Ce soir" flickers on like a neon tube, and a live countdown runs to opening or closing time.</p><dl><dt>Trigger</dt><dd>Enters view; bulbs always on</dd><dt>Timing</dt><dd>1.2 s chase loop; flicker kept under 3 flashes per second</dd><dt>Reduced</dt><dd>Bulbs lit and steady, no flicker</dd></dl><button class="spec-go" data-r="16">Show me ▸</button></div></article>
+    <article class="spec" id="m17"><span class="spec-n">17</span><div><h3>Developing photo &amp; depth</h3><p>The storefront develops as you scroll toward it, the Eiffel engraving drifts at a different depth, and the addresses slide in.</p><dl><dt>Trigger</dt><dd>Scroll-linked</dd><dt>Timing</dt><dd>Follows the scroll · Ink</dd><dt>Reduced</dt><dd>Static</dd></dl><button class="spec-go" data-r="17">Show me ▸</button></div></article>
+    <article class="spec" id="m18"><span class="spec-n">18</span><div><h3>Back-page fold</h3><p>The footer stands up from flat as you reach the end, like turning the paper over. "Réimprimer" runs the press start again.</p><dl><dt>Trigger</dt><dd>Scroll-linked</dd><dt>Timing</dt><dd>Follows the scroll · Press</dd><dt>Reduced</dt><dd>Static footer</dd></dl><button class="spec-go" data-r="18">Show me ▸</button></div></article>
+    <article class="spec" id="m19"><span class="spec-n">19</span><div><h3>Ink cursor</h3><p>A red ink dot follows the pointer and swells into a labeled blot over anything clickable: Lire, Ajouter, Go.</p><dl><dt>Trigger</dt><dd>Mouse and trackpad only</dd><dt>Timing</dt><dd>0.25 s follow · Ink</dd><dt>Reduced</dt><dd>Off; normal cursor</dd></dl><button class="spec-go" data-r="19">Show me ▸</button></div></article>
+    <article class="spec"><span class="spec-n">20</span><div><h3>Page transitions</h3><p>Four transitions, each tied to a type of navigation. Try them in the lab above.</p><dl><dt>Trigger</dt><dd>Moving between pages</dd><dt>Timing</dt><dd>1.1–1.5 s · Press</dd><dt>Reduced</dt><dd>150 ms crossfade</dd></dl><button class="spec-go" data-r="20">Show me ▸</button></div></article>
+  </div>
+</section>
+
+<!-- ================= BUILD NOTES ================= -->
+<section class="wrap dsec" aria-labelledby="build-h">
+  <div class="dsec-h">
+    <div><span class="label">Build notes</span><h2 id="build-h">Ambitious, but built to stay fast</h2></div>
+    <p>Everything shown here is production technique, not a video. This prototype runs on the same tools the site would use.</p>
+  </div>
+  <div class="notes-grid">
+    <div class="note"><h3>Tools</h3><ul><li>GSAP with ScrollTrigger for sequences and scroll-linked motion. Free for commercial use.</li><li>The browser's View Transitions API for page changes, with GSAP as a fallback.</li><li>CSS only for loops: ticker, bulbs, hovers.</li></ul></div>
+    <div class="note"><h3>Performance</h3><ul><li>Only transform, opacity, clip-path and masks are animated, so motion stays on the GPU.</li><li>Off-screen animations pause; photos lazy-load as modern formats.</li><li>Target: smooth 60 fps on a mid-range Android phone.</li></ul></div>
+    <div class="note"><h3>Accessibility</h3><ul><li>Every motion has a reduced-motion version (listed in the spec).</li><li>The press start plays once per visit and never blocks reading or ordering.</li><li>No flashing above 3 times per second.</li></ul></div>
+  </div>
+  <div class="steps">
+    <div><b>Approve the motion set</b>Or mark any of the twenty to cut or tone down.</div>
+    <div><b>Remaining pages</b>Menu, story, locations and order flow, in the same system.</div>
+    <div><b>Own photography</b>Product shoot to replace stock images before launch.</div>
+    <div><b>Frontend build</b>Responsive build with motion tokens from this document.</div>
+  </div>
+  <details class="credits"><summary class="label">Image credits</summary><ul>
+    <li>Photos via Unsplash (Unsplash License): Logan Weaver, Louis Hansel, Markus Winkler, Pixzolo Photography, Henry Perks, Abbie Newton, Camille Brodard, Hai Nguyen, Atelierbyvineeth, Kier in Sight Archives and the others listed in the project's image credits file</li>
+    <li>Engravings: public domain and CC0, via Openverse (Flickr, rawpixel)</li>
+  </ul></details>
+  <footer class="foot"><span>GRUFF · Landing page motion · Direction A</span><span>Copy and prices are placeholders. Photos are Unsplash stock.</span></footer>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(() => {
+const $ = (s, c = document) => c.querySelector(s);
+const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
+const site = $('#site');
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const G = typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined' && !RM;
+const pad = n => String(n).padStart(2, '0');
+const euro = v => v.toFixed(2).replace('.', ',');
+
+/* ---------- live content (works with or without motion) ---------- */
+const dl = $('.dl-type');
+function dateStr() {
+  const d = new Date();
+  let s = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  s = s.charAt(0).toUpperCase() + s.slice(1);
+  return `Paris · ${s} · ${pad(d.getHours())}h${pad(d.getMinutes())}`;
+}
+dl.textContent = dateStr();
+setInterval(() => { if (!dl.classList.contains('typing')) dl.textContent = dateStr(); }, 15000);
+
+const tk = $('.tk-track'); tk.insertAdjacentHTML('beforeend', tk.innerHTML);
+setInterval(() => { $$('.q-time').forEach(q => q.textContent = 9 + Math.floor(Math.random() * 7)); }, 4000);
+
+$$('.odo').forEach(o => {
+  const v = o.dataset.v; o.textContent = ''; o.setAttribute('aria-label', v + ' euros');
+  [...v].forEach(ch => {
+    if (/\d/.test(ch)) {
+      const d = document.createElement('span'); d.className = 'd'; d.setAttribute('aria-hidden', 'true');
+      const s = document.createElement('span'); s.className = 's'; s.dataset.d = ch;
+      s.innerHTML = [0,1,2,3,4,5,6,7,8,9].join('<br>');
+      s.style.transform = `translateY(${-ch * 10}%)`;
+      d.appendChild(s); o.appendChild(d);
+    } else { const c = document.createElement('span'); c.textContent = ch; c.setAttribute('aria-hidden', 'true'); o.appendChild(c); }
+  });
+});
+
+const lp = $('.lp'); lp.innerHTML = lp.textContent.trim().split(/\s+/).map(w => `<span class="w">${w}</span>`).join(' ');
+
+const bw = $('.bulbs');
+(function placeBulbs() {
+  const N = 18, M = 8; let i = 0;
+  const add = (x, y) => { const b = document.createElement('i'); b.style.left = x + '%'; b.style.top = y + '%'; b.style.animationDelay = (-(i % 3) * 0.4) + 's'; i++; bw.appendChild(b); };
+  for (let k = 0; k < N; k++) add(k / (N - 1) * 100, 0);
+  for (let k = 1; k < M; k++) add(100, k / M * 100);
+  for (let k = N - 1; k >= 0; k--) add(k / (N - 1) * 100, 100);
+  for (let k = M - 1; k > 0; k--) add(0, k / M * 100);
+})();
+
+function countdown() {
+  const n = new Date(), h = n.getHours(), open = h >= 17 || h < 2, t = new Date(n);
+  if (open) { if (h >= 17) t.setDate(t.getDate() + 1); t.setHours(2, 0, 0, 0); } else t.setHours(17, 0, 0, 0);
+  const s = Math.max(0, Math.floor((t - n) / 1000));
+  $('.cd-l').textContent = open ? 'Fermeture dans' : 'Ouverture dans';
+  $('.cd-v').textContent = `${pad(Math.floor(s / 3600))}:${pad(Math.floor(s % 3600 / 60))}:${pad(s % 60)}`;
+  $('.soir-state').textContent = open ? 'Ouvert ce soir' : 'Fermé · ouvre à 17h';
+}
+countdown(); setInterval(countdown, 1000);
+
+$('#nl').addEventListener('submit', e => { e.preventDefault(); const b = e.target.querySelector('button'); b.textContent = 'Inscrit ✓'; });
+
+const notesTog = $('#notes-tog');
+notesTog.addEventListener('click', () => {
+  const on = notesTog.getAttribute('aria-pressed') !== 'true';
+  notesTog.setAttribute('aria-pressed', on); site.classList.toggle('notes', on);
+});
+
+/* ---------- ticket printer ---------- */
+const order = []; const rl = $('.rc-lines');
+function addLine(name, price) {
+  order.push(price);
+  const li = document.createElement('li'); li.innerHTML = `<span>1 × ${name}</span><b>${euro(price)}</b>`;
+  rl.appendChild(li); $('.rc-empty').hidden = true;
+  while (rl.children.length > 4) rl.removeChild(rl.firstChild);
+  $('.rc-total b').textContent = euro(order.reduce((a, b) => a + b, 0)) + ' €';
+  $('.rc-count').textContent = order.length;
+  if (G) {
+    gsap.fromTo(li, { height: 0, opacity: 0 }, { height: 'auto', opacity: 1, duration: .45, ease: 'power2.out' });
+    gsap.fromTo('.rc-printer', { x: -3 }, { x: 0, duration: .5, ease: 'elastic.out(1,.25)' });
+    gsap.fromTo('.rc-paper', { y: 8 }, { y: 0, duration: .5, ease: 'power3.out' });
+  }
+}
+$$('.add').forEach(b => b.addEventListener('click', () => {
+  const card = b.closest('.clip'), name = card.dataset.name, price = +card.dataset.price;
+  if (!G) { addLine(name, price); return; }
+  gsap.fromTo(b, { scale: .88 }, { scale: 1, duration: .45, ease: 'back.out(3)' });
+  const img = card.querySelector('img'), r = img.getBoundingClientRect(), t = $('.rc-paper').getBoundingClientRect();
+  const f = img.cloneNode(); f.className = 'flyer'; f.alt = ''; document.body.appendChild(f);
+  const S = 76, cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+  gsap.set(f, { position: 'fixed', left: cx - S / 2, top: cy - S / 2, width: S, height: S, zIndex: 999, margin: 0 });
+  gsap.timeline({ onComplete: () => { f.remove(); addLine(name, price); } })
+    .to(f, { x: t.left + t.width / 2 - cx, duration: .85, ease: 'power1.inOut' }, 0)
+    .to(f, { y: t.top + 24 - cy, duration: .85, ease: 'back.in(1.8)' }, 0)
+    .to(f, { scale: .25, rotation: 300, duration: .85, ease: 'power2.in' }, 0);
+}));
+
+/* ---------- transitions lab ---------- */
+let cur = 'a', busy = false;
+const TR = {
+  turn(from, to) {
+    gsap.set(to, { autoAlpha: 1, zIndex: 1 }); gsap.set(from, { zIndex: 2 });
+    const sh = from.querySelector('.tp-shade');
+    return gsap.timeline()
+      .to(from, { rotationY: -165, transformOrigin: '0% 50%', transformPerspective: 1600, duration: 1.15, ease: 'power3.inOut' })
+      .fromTo(sh, { opacity: 0 }, { opacity: .7, duration: 1.15, ease: 'power2.in' }, 0)
+      .set(from, { autoAlpha: 0, rotationY: 0, zIndex: 0 }).set(sh, { opacity: 0 });
+  },
+  blot(from, to) {
+    const ink = $('.tp-ink');
+    return gsap.timeline()
+      .set(ink, { autoAlpha: 1 })
+      .fromTo(ink, { clipPath: 'circle(0% at 28% 38%)' }, { clipPath: 'circle(150% at 28% 38%)', duration: .75, ease: 'power3.in' })
+      .set(from, { autoAlpha: 0 }).set(to, { autoAlpha: 1, zIndex: 1 })
+      .fromTo(ink, { clipPath: 'circle(150% at 72% 62%)' }, { clipPath: 'circle(0% at 72% 62%)', duration: .75, ease: 'power3.out' })
+      .set(ink, { autoAlpha: 0 });
+  },
+  roll(from, to) {
+    const bar = $('.tp-roller');
+    return gsap.timeline()
+      .set(to, { autoAlpha: 1, zIndex: 2, clipPath: 'inset(0% 0% 100% 0%)' }).set(from, { zIndex: 1 }).set(bar, { autoAlpha: 1, top: '0%' })
+      .to(to, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.2, ease: 'power2.inOut' }, 'r')
+      .to(bar, { top: '100%', duration: 1.2, ease: 'power2.inOut' }, 'r')
+      .fromTo(from, { filter: 'brightness(1)' }, { filter: 'brightness(.55)', duration: 1.2 }, 'r')
+      .set(bar, { autoAlpha: 0 }).set(from, { autoAlpha: 0, filter: 'none' }).set(to, { clipPath: 'none' });
+  },
+  cols(from, to) {
+    const st = $$('.tp-strip');
+    return gsap.timeline()
+      .set(st, { autoAlpha: 1 })
+      .fromTo(st, { scaleY: 0, transformOrigin: '50% 0%' }, { scaleY: 1, duration: .45, stagger: .07, ease: 'power3.in' })
+      .set(from, { autoAlpha: 0 }).set(to, { autoAlpha: 1, zIndex: 1 })
+      .to(st, { scaleY: 0, transformOrigin: '50% 100%', duration: .45, stagger: .07, ease: 'power3.out' })
+      .set(st, { autoAlpha: 0 });
+  }
+};
+const stage = $('#stage');
+for (let k = 0; k < 5; k++) { const s = document.createElement('div'); s.className = 'tp-strip'; s.style.left = (k * 20) + '%'; s.style.width = '20.2%'; stage.appendChild(s); }
+function runTrans(k) {
+  if (busy) return; busy = true;
+  $$('.tbtn').forEach(b => b.classList.toggle('on', b.dataset.t === k));
+  const from = $('.tp-' + cur), to = $('.tp-' + (cur === 'a' ? 'b' : 'a'));
+  const done = () => { cur = cur === 'a' ? 'b' : 'a'; busy = false; };
+  if (!G) { from.style.visibility = 'hidden'; from.style.opacity = 0; to.style.visibility = 'visible'; to.style.opacity = 1; done(); return; }
+  TR[k](from, to).eventCallback('onComplete', done);
+}
+$$('.tbtn').forEach(b => b.addEventListener('click', () => runTrans(b.dataset.t)));
+
+/* ---------- replay + show me wiring (filled in below when motion is on) ---------- */
+const PLAY = {}; const TARGET = {
+  1: '#s-front', 2: '.dateline', 3: '.mast', 4: '.ticker', 5: '.lp', 6: '.lead-ph', 7: '.fp-grid', 8: '.fp-menu', 9: '.stamp-wrap', 10: '.boy',
+  11: '#s-menu', 12: '#s-menu .clips', 13: '#s-menu .clips', 14: '#s-field', 15: '#s-sauces .ads', 16: '.frame', 17: '#s-adresses .loc', 18: '.foot-wrap', 19: '#s-menu .clips', 20: '#stage'
+};
+function showMe(n) {
+  const el = $(TARGET[n]); if (!el) return;
+  const block = (n == 14 || n == 1 || n == 18) ? 'start' : 'center';
+  el.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block });
+  if (PLAY[n]) setTimeout(PLAY[n], RM ? 0 : 750);
+}
+$$('.spec-go').forEach(b => b.addEventListener('click', () => showMe(+b.dataset.r)));
+$$('.pin').forEach(p => p.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); const n = +p.dataset.r; PLAY[n] ? PLAY[n]() : showMe(n); }));
+
+if (!G) {
+  $('.bubble').style.transform = 'none';
+  return;
+}
+
+/* =================== MOTION =================== */
+gsap.registerPlugin(ScrollTrigger);
+const T = {};
+const onEnter = (trigger, fn, start = 'top 80%') => ScrollTrigger.create({ trigger, start, once: true, onEnter: fn });
+
+/* 02 typewriter */
+const typ = { n: 0 };
+T.date = gsap.timeline({ paused: true, onStart: () => dl.classList.add('typing'), onComplete: () => { dl.classList.remove('typing'); dl.textContent = dateStr(); } })
+  .fromTo(typ, { n: 0 }, { n: () => dateStr().length, duration: 1.4, ease: 'none', onUpdate: () => { dl.textContent = dateStr().slice(0, Math.round(typ.n)); } });
+
+/* 03 gold-leaf stamp + glint + light */
+const ls = $$('.mast .ml'), mast = $('.mast');
+T.mast = gsap.timeline({ paused: true })
+  .fromTo(ls, { scale: 2.8, autoAlpha: 0, y: -34, rotation: i => [-9, 6, -4, 8, -6][i] },
+    { scale: 1, autoAlpha: 1, y: 0, rotation: 0, duration: .32, ease: 'power4.in',
+      stagger: { each: .13, onComplete() { gsap.fromTo('.mast-row', { y: 4 }, { y: 0, duration: .35, ease: 'power3.out' }); } } })
+  .fromTo('.glint', { backgroundPosition: '150% 0%' }, { backgroundPosition: '-60% 0%', duration: 1.2, ease: 'power2.inOut' }, '+=.05');
+$('#s-front').addEventListener('pointermove', e => {
+  const r = mast.getBoundingClientRect();
+  gsap.to(mast, { '--gx': (((e.clientX - r.left) / r.width) * 60 + 20).toFixed(1) + '%', '--gy': (((e.clientY - r.top) / Math.max(r.height, 1)) * 60 + 20).toFixed(1) + '%', duration: .8, ease: 'power3.out', overwrite: true });
+});
+
+/* 05 letterpress headline + section titles */
+T.head = gsap.timeline({ paused: true })
+  .fromTo('.lp .w', { y: 46, autoAlpha: 0, rotation: () => gsap.utils.random(-9, 9) }, { y: 0, autoAlpha: 1, rotation: 0, duration: .8, stagger: .07, ease: 'back.out(1.7)' });
+T.titles = $$('.sec-title').map(t => {
+  const tl = gsap.timeline({ paused: true }).fromTo(t, { clipPath: 'inset(100% 0% 0% 0%)', y: 40 }, { clipPath: 'inset(0% 0% 0% 0%)', y: 0, duration: .9, ease: 'power3.out' });
+  onEnter(t, () => tl.restart(), 'top 88%'); return tl;
+});
+
+/* 06 halftone print (hero photos) */
+T.ht = gsap.timeline({ paused: true })
+  .fromTo('.hero .ht', { '--ht': '0px' }, { '--ht': '7px', duration: 1.8, stagger: .3, ease: 'power2.inOut' })
+  .fromTo('.hero .lead-ph', { filter: 'grayscale(1) contrast(1.5)' }, { filter: 'grayscale(0) contrast(1)', duration: 1.1, ease: 'power2.out' }, .9);
+
+/* 07 column rules */
+T.rules = gsap.timeline({ paused: true })
+  .fromTo('.fp-grid', { '--rv': 0 }, { '--rv': 1, duration: 1.2, ease: 'power2.inOut' })
+  .fromTo('.mainnav', { '--rh': 0 }, { '--rh': 1, duration: 1.2, ease: 'power2.inOut' }, 0);
+
+/* 08 leaders + odometer */
+T.odo = gsap.timeline({ paused: true }).fromTo('.fp-menu .ldr', { scaleX: 0 }, { scaleX: 1, duration: .6, stagger: .1, ease: 'power2.out' });
+$$('.fp-menu .odo .s').forEach((s, i) => { s.style.transform = ''; gsap.set(s, { yPercent: -s.dataset.d * 10 }); T.odo.fromTo(s, { yPercent: -90 }, { yPercent: -s.dataset.d * 10, duration: 1.3, ease: 'power3.out' }, .35 + i * .04); });
+
+/* 09 stamp */
+T.stamp = gsap.timeline({ paused: true })
+  .fromTo('.stamp', { scale: 3.2, autoAlpha: 0, rotation: -22 }, { scale: 1, autoAlpha: 1, rotation: -4, duration: .38, ease: 'power4.in' })
+  .fromTo('.stamp-ring', { scale: .6, autoAlpha: .8 }, { scale: 1.9, autoAlpha: 0, duration: .65, ease: 'power2.out' })
+  .fromTo('.fp-grid', { x: -5 }, { x: 0, duration: .55, ease: 'elastic.out(1,.3)' }, '<');
+let ghosts = 0;
+$('.stamp').addEventListener('click', () => {
+  const w = $('.stamp-wrap'), g = document.createElement('span'); g.className = 'ghost';
+  gsap.set(g, { x: gsap.utils.random(-14, 14), y: gsap.utils.random(-10, 10), rotation: gsap.utils.random(-12, 6) });
+  w.insertBefore(g, w.firstChild); if (++ghosts > 3) { w.querySelector('.ghost:last-of-type')?.remove(); }
+  T.stamp.restart();
+});
+
+/* 10 newsboy */
+T.boy = gsap.timeline({ paused: true })
+  .set('.bubble', { scale: 0, autoAlpha: 0 })
+  .fromTo('.boy', { x: () => Math.min(window.innerWidth * .6, 640) }, { x: 0, duration: 1.5, ease: 'power2.out' })
+  .fromTo('.boy img', { y: 0 }, { y: -8, duration: .11, repeat: 11, yoyo: true, ease: 'sine.inOut' }, 0)
+  .to('.bubble', { scale: 1, autoAlpha: 1, duration: .5, ease: 'back.out(2.6)' }, '-=.15');
+$('.boy').addEventListener('click', e => { if (!e.target.closest('.pin')) T.boy.restart(); });
+
+/* 01 press start (orchestrates the front page) */
+const intro = $('.intro'); intro.hidden = false;
+const cnt = $('.intro-n'), nn = { v: 0 };
+T.intro = gsap.timeline({ paused: true })
+  .set(intro, { autoAlpha: 1 }).set(['.intro-top', '.intro-bot'], { yPercent: 0 }).set('.intro-count', { autoAlpha: 1 })
+  .call(() => { $('.intro-count small').textContent = 'Impression en cours…'; })
+  .fromTo(nn, { v: 0 }, { v: 100, duration: 1.1, ease: 'power2.inOut', onUpdate: () => { cnt.textContent = String(Math.round(nn.v)).padStart(3, '0'); } })
+  .to('.intro-count', { autoAlpha: 0, duration: .25 })
+  .addLabel('open')
+  .to('.intro-top', { yPercent: -101, duration: 1, ease: 'expo.inOut' }, 'open')
+  .to('.intro-bot', { yPercent: 101, duration: 1, ease: 'expo.inOut' }, 'open')
+  .set(intro, { autoAlpha: 0 })
+  .call(() => T.date.restart(), null, 'open+=.35')
+  .call(() => T.mast.restart(), null, 'open+=.5')
+  .call(() => T.rules.restart(), null, 'open+=.75')
+  .call(() => T.head.restart(), null, 'open+=1.1')
+  .call(() => T.ht.restart(), null, 'open+=1.25')
+  .call(() => T.odo.restart(), null, 'open+=1.7')
+  .call(() => T.stamp.restart(), null, 'open+=2.7')
+  .call(() => T.boy.restart(), null, 'open+=3.0');
+// hold the front page in its pre-print state until the plate opens
+[T.mast, T.head, T.ht, T.rules, T.odo, T.stamp, T.boy].forEach(t => t.progress(0).pause());
+gsap.set('.bubble', { scale: 0, autoAlpha: 0 });
+onEnter('#s-front', () => T.intro.restart(), 'top 65%');
+
+/* 11 mini masthead + page counter + progress */
+gsap.set('.mini-bar', { rotationX: -95, autoAlpha: 0, transformOrigin: '50% 0%', transformPerspective: 900 });
+const showMini = on => gsap.to('.mini-bar', { rotationX: on ? 0 : -95, autoAlpha: on ? 1 : 0, duration: on ? .7 : .35, ease: on ? 'back.out(1.6)' : 'power2.in', overwrite: true });
+ScrollTrigger.create({ trigger: '.hero', start: 'bottom top+=40', endTrigger: '#site', end: 'bottom top+=120', onToggle: s => showMini(s.isActive) });
+ScrollTrigger.create({ trigger: '#site', start: 'top top', end: 'bottom bottom', onUpdate: s => gsap.set('.mini-prog i', { scaleX: s.progress }) });
+const pg = $('.pg');
+['#s-front', '#s-menu', '#s-field', '#s-sauces', '#s-soir', '#s-adresses'].forEach((sel, i) => ScrollTrigger.create({
+  trigger: sel, start: 'top center', end: 'bottom center',
+  onToggle: s => { if (!s.isActive || pg.textContent == i + 1) return;
+    gsap.to(pg, { rotationX: 90, duration: .15, ease: 'power2.in', onComplete: () => { pg.textContent = i + 1; gsap.fromTo(pg, { rotationX: -90 }, { rotationX: 0, duration: .3, ease: 'back.out(2)' }); } }); }
+}));
+PLAY[11] = () => { $('#s-menu').scrollIntoView({ behavior: 'smooth', block: 'start' }); setTimeout(() => { gsap.set('.mini-bar', { rotationX: -95, autoAlpha: 0 }); showMini(true); }, 800); };
+
+/* 12 clipping deal + menu halftones */
+T.clip = gsap.timeline({ paused: true })
+  .fromTo('.clip', { y: 110, x: () => gsap.utils.random(-40, 40), rotation: i => [-14, 10, -8, 12][i], autoAlpha: 0 }, { y: 0, x: 0, rotation: 0, autoAlpha: 1, duration: .95, stagger: .12, ease: 'back.out(1.4)' })
+  .fromTo('#s-menu .ht', { '--ht': '0px' }, { '--ht': '7px', duration: 1.4, stagger: .12, ease: 'power2.inOut' }, .3);
+T.clip.progress(0).pause();
+onEnter('#s-menu .clips', () => T.clip.restart(), 'top 82%');
+
+/* 14 darkroom scroll */
+const track = $('.field-track');
+track.style.overflowX = 'visible';
+const dist = () => Math.max(0, track.scrollWidth - document.documentElement.clientWidth);
+const move = gsap.to(track, { x: () => -dist(), ease: 'none',
+  scrollTrigger: { trigger: '.field-pin', pin: true, start: 'top top', end: () => '+=' + dist(), scrub: .6, invalidateOnRefresh: true } });
+const roH = $('.ro-h'), roT = $('.ro-t');
+function gauges(p) {
+  const hour = 6 + p * 15, h = Math.floor(hour), m = Math.floor((hour - h) * 60);
+  roH.textContent = `${pad(h)}h${pad(m)}`;
+  gsap.set('.hand-h', { rotation: (hour % 12) * 30, svgOrigin: '60 60' });
+  gsap.set('.hand-m', { rotation: m * 6, svgOrigin: '60 60' });
+  let temp = 20;
+  if (hour >= 16 && hour < 17.5) temp = 20 + (hour - 16) / 1.5 * 120; else if (hour >= 17.5 && hour < 20) temp = 140; else if (hour >= 20) temp = 140 + Math.min(1, hour - 20) * 45;
+  roT.textContent = Math.round(temp) + '°'; roT.classList.toggle('hot', temp > 100);
+  gsap.set('.merc', { scaleY: Math.max(.08, temp / 200) });
+}
+gauges(0);
+ScrollTrigger.create({ trigger: '.field-pin', start: 'top top', end: () => '+=' + dist(), onUpdate: s => gauges(s.progress), invalidateOnRefresh: true });
+$$('.fpanel img.dev').forEach(img => {
+  const bwx = img.classList.contains('bw') ? 1 : 0;
+  gsap.fromTo(img, { filter: `brightness(2.6) contrast(.45) blur(6px) grayscale(${bwx})` },
+    { filter: `brightness(1) contrast(1) blur(0px) grayscale(${bwx})`, ease: 'none',
+      scrollTrigger: { trigger: img, containerAnimation: move, start: 'left 92%', end: 'center 55%', scrub: true } });
+});
+
+/* 15 classified paste-up + tilt */
+T.ads = gsap.timeline({ paused: true })
+  .fromTo('.ad', { clipPath: 'inset(0% 0% 100% 0%)', y: 16 }, { clipPath: 'inset(0% 0% 0% 0%)', y: 0, duration: .7, stagger: { each: .12, from: 'random' }, ease: 'power3.inOut' })
+  .fromTo('.ad-hand', { x: 90, autoAlpha: 0, rotation: 12 }, { x: 0, autoAlpha: 1, rotation: 0, duration: .9, ease: 'back.out(1.8)' }, '-=.2')
+  .to('.ad-hand', { x: -10, duration: .35, repeat: 3, yoyo: true, ease: 'sine.inOut' });
+T.ads.progress(0).pause();
+onEnter('#s-sauces .ads', () => T.ads.restart(), 'top 80%');
+if (matchMedia('(pointer:fine)').matches) $$('.ad').forEach(ad => {
+  ad.addEventListener('pointermove', e => { const r = ad.getBoundingClientRect(); gsap.to(ad, { rotationY: ((e.clientX - r.left) / r.width - .5) * 16, rotationX: -((e.clientY - r.top) / r.height - .5) * 16, duration: .4, ease: 'power2.out' }); });
+  ad.addEventListener('pointerleave', () => gsap.to(ad, { rotationX: 0, rotationY: 0, duration: .7, ease: 'elastic.out(1,.4)' }));
+});
+
+/* 16 evening edition: bulbs ignite + neon flicker (≤ 3 flashes / s) */
+T.soir = gsap.timeline({ paused: true })
+  .fromTo('.bulbs', { autoAlpha: 0 }, { autoAlpha: 1, duration: .5 })
+  .set('.soir-script', { autoAlpha: 0 })
+  .to('.soir-script', { keyframes: [ { autoAlpha: 1, duration: .08 }, { autoAlpha: .35, duration: .3 }, { autoAlpha: 1, duration: .08 }, { autoAlpha: .45, duration: .35 }, { autoAlpha: 1, duration: .3 } ] })
+  .fromTo('.cd', { y: 20, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .6, ease: 'power3.out' }, '-=.4')
+  .fromTo('.frame .btn-amber', { scale: .85, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: .6, ease: 'back.out(2)' }, '-=.3');
+T.soir.progress(0).pause();
+onEnter('.frame', () => T.soir.restart(), 'top 75%');
+gsap.fromTo('.soir-bg', { yPercent: -8, scale: 1.12 }, { yPercent: 8, scale: 1.12, ease: 'none', scrollTrigger: { trigger: '.soir', start: 'top bottom', end: 'bottom top', scrub: true } });
+
+/* 17 developing storefront + parallax + addresses */
+gsap.fromTo('.loc img.dev', { filter: 'brightness(2.6) contrast(.45) blur(6px) grayscale(1)' }, { filter: 'brightness(1) contrast(1.08) blur(0px) grayscale(1)', ease: 'none', scrollTrigger: { trigger: '.loc', start: 'top 90%', end: 'top 35%', scrub: true } });
+gsap.fromTo('.loc-eiffel', { yPercent: 30 }, { yPercent: -30, ease: 'none', scrollTrigger: { trigger: '#s-adresses', start: 'top bottom', end: 'bottom top', scrub: true } });
+T.loc = gsap.timeline({ paused: true }).fromTo('.addr li', { x: -40, autoAlpha: 0 }, { x: 0, autoAlpha: 1, stagger: .14, duration: .7, ease: 'power3.out' });
+T.loc.progress(0).pause();
+onEnter('.addr', () => T.loc.restart(), 'top 80%');
+
+/* 18 back-page fold */
+gsap.fromTo('.fold', { rotationX: -88 }, { rotationX: 0, ease: 'none', transformOrigin: '50% 100%', scrollTrigger: { trigger: '.foot-wrap', start: 'top bottom', end: 'bottom bottom', scrub: .5 } });
+$('#reprint').addEventListener('click', () => { $('#s-front').scrollIntoView({ behavior: 'smooth', block: 'start' }); setTimeout(() => T.intro.restart(), 900); });
+
+/* 19 ink cursor */
+if (matchMedia('(pointer:fine)').matches) {
+  const c = $('.ink-cursor');
+  const xTo = gsap.quickTo(c, 'x', { duration: .25, ease: 'power3' }), yTo = gsap.quickTo(c, 'y', { duration: .25, ease: 'power3' });
+  site.addEventListener('pointermove', e => { xTo(e.clientX); yTo(e.clientY); });
+  site.addEventListener('pointerenter', () => gsap.to(c, { autoAlpha: 1, duration: .2 }));
+  site.addEventListener('pointerleave', () => gsap.to(c, { autoAlpha: 0, duration: .2 }));
+  $$('[data-cur]', site).forEach(el => {
+    el.addEventListener('pointerenter', () => { c.dataset.label = el.dataset.cur; c.classList.add('big'); });
+    el.addEventListener('pointerleave', () => c.classList.remove('big'));
+  });
+}
+
+/* ticket printer slides up once the menu is reached */
+gsap.set('.rc', { yPercent: 140, autoAlpha: 0 });
+ScrollTrigger.create({ trigger: '#s-menu', start: 'top 70%', endTrigger: '#site', end: 'bottom bottom', onToggle: s => gsap.to('.rc', { yPercent: s.isActive ? 0 : 140, autoAlpha: s.isActive ? 1 : 0, duration: s.isActive ? .7 : .4, ease: s.isActive ? 'back.out(1.4)' : 'power2.in', overwrite: true }) });
+
+/* nav links: smooth scroll inside the prototype */
+$$('#site a[href^="#s-"]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); $(a.getAttribute('href')).scrollIntoView({ behavior: 'smooth', block: 'start' }); }));
+
+/* replay registry */
+Object.assign(PLAY, {
+  1: () => T.intro.restart(), 2: () => T.date.restart(), 3: () => T.mast.restart(),
+  5: () => { T.head.restart(); T.titles.forEach(t => t.restart()); }, 6: () => T.ht.restart(), 7: () => T.rules.restart(),
+  8: () => T.odo.restart(), 9: () => T.stamp.restart(), 10: () => T.boy.restart(), 12: () => T.clip.restart(),
+  13: () => $('.clip .add').click(), 15: () => T.ads.restart(), 16: () => T.soir.restart(), 17: () => T.loc.restart(),
+  20: () => runTrans(['turn', 'blot', 'roll', 'cols'][Math.floor(Math.random() * 4)])
+});
+
+window.addEventListener('load', () => ScrollTrigger.refresh());
+})();
+</script>

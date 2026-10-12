@@ -1,0 +1,999 @@
+<title>GRUFF Design Directions</title>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,600;1,6..96,400&family=Cinzel:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Courier+Prime:wght@400;700&family=DM+Mono:wght@400;500&family=IM+Fell+English:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Pinyon+Script&family=Rozha+One&family=Shrikhand&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap">
+<style>
+/* Layout: a quiet bound-portfolio wrapper; each direction gets a full-width homepage mockup, then a palette / components / phone row. Single light theme by choice: the mockups carry their own colors. */
+:root{
+  --doc-bg:#ECE7DF; --doc-card:#F6F3EE; --doc-ink:#1F1B17; --doc-mute:#6C6359; --doc-rule:#CEC5B7; --doc-accent:#9E4F27;
+  --f-doc:"Newsreader", Georgia, "Times New Roman", serif;
+  --f-label:"DM Mono", ui-monospace, Consolas, monospace;
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .25 0 0 0 0 .18 0 0 0 0 .1 0 0 0 .32 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+body{background:var(--doc-bg);color:var(--doc-ink);font-family:var(--f-doc);font-size:17px;line-height:1.55}
+.defs{position:absolute;width:0;height:0;overflow:hidden}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:clamp(16px,4vw,48px);padding-block:40px 96px}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--doc-accent);outline-offset:3px}
+.label{font-family:var(--f-label);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--doc-mute)}
+h1,h2,h3{text-wrap:balance}
+p{max-width:65ch}
+
+/* ---------- Cover ---------- */
+.cover{display:grid;gap:20px;padding-bottom:36px;border-bottom:1px solid var(--doc-rule)}
+.cover-meta{display:flex;flex-wrap:wrap;gap:8px 28px}
+.cover h1{font-size:clamp(38px,6vw,72px);line-height:1;font-weight:400;margin:6px 0 0;letter-spacing:-.01em}
+.cover h1 em{color:var(--doc-accent)}
+.cover .lead{font-size:20px;color:#3d3630;margin:0}
+.covers{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:12px}
+.cv{display:block;text-decoration:none;border-radius:6px;overflow:hidden;box-shadow:0 1px 0 rgba(0,0,0,.06),0 18px 30px -24px rgba(50,30,10,.5);transition:transform .25s}
+.cv:hover{transform:translateY(-3px)}
+.cv-art{height:150px;display:grid;place-items:center;position:relative;overflow:hidden}
+.cv-bars{display:flex;height:12px}
+.cv-bars span{flex:1}
+.cv-cap{background:var(--doc-card);padding:12px 14px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.cv-cap b{font-weight:600;font-size:18px}
+.cv-a .cv-art{background:#F8F6F1}
+.cv-a .cv-art span{font-family:"Rozha One",serif;font-size:62px;background:url("assets/gold-leaf.jpg") center/cover;-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 0 rgba(0,0,0,.3));letter-spacing:.04em}
+.cv-a .cv-art::before{content:"";position:absolute;inset:16px 22px auto;border-top:4px double #1A1A1A}
+.cv-a .cv-art::after{content:"";position:absolute;inset:auto 22px 16px;border-top:1px solid #1A1A1A}
+.cv-b .cv-art{background:radial-gradient(90% 90% at 70% 30%,#4A2414,#120D0A 65%)}
+.cv-b .cv-art span{font-family:"Shrikhand",cursive;font-size:56px;color:#FFE7B8;transform:rotate(-5deg);text-shadow:1px 1px 0 #F4A23A,2px 2px 0 #E08A2E,3px 3px 0 #C46A35,4px 4px 0 #A65528,5px 5px 0 #7E3C1C,0 0 26px rgba(255,190,90,.6)}
+.cv-c .cv-art{background:var(--grain),#FBF7F2}
+.cv-c .cv-art svg{width:70%;height:auto}
+.cv-c .cv-art span{position:absolute;font-family:"Pinyon Script",cursive;font-size:46px;color:#2F3A48}
+
+/* ---------- Sections ---------- */
+.sec{padding-top:64px}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:24px 48px;align-items:end;margin-bottom:28px}
+.sec-head h2{margin:6px 0 0;font-weight:400;font-size:clamp(30px,4.2vw,48px);line-height:1.05}
+.sec-head p{margin:0;color:#3d3630}
+
+/* Brief materials */
+.mats{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+.mat{display:grid;gap:8px}
+.mat-sw{aspect-ratio:1;border-radius:4px;position:relative;overflow:hidden;display:grid;place-items:center;max-width:100%}
+.mat b{font-weight:600;font-size:15px;line-height:1.25}
+.mat small{color:var(--doc-mute);font-size:13.5px;line-height:1.35}
+.m-paper{background:linear-gradient(100deg,transparent 48%,rgba(90,60,20,.18) 50%,transparent 52%),radial-gradient(ellipse at 50% 50%,transparent 40%,rgba(110,70,25,.35)),var(--grain),#E2D2AE}
+.m-ink{background:#F8F6F1}
+.m-ink svg{width:62%;height:auto}
+.m-amber{background:radial-gradient(circle at 30% 35%,rgba(255,214,150,.9) 0 9%,transparent 16%),radial-gradient(circle at 70% 60%,rgba(244,162,58,.7) 0 12%,transparent 20%),radial-gradient(circle at 55% 22%,rgba(233,169,160,.55) 0 7%,transparent 13%),radial-gradient(circle at 22% 78%,rgba(196,106,53,.6) 0 8%,transparent 15%),#170F0B;filter:saturate(1.1)}
+.m-gold{background:#2A2119}
+.m-gold span{font-family:"Rozha One",serif;font-size:clamp(40px,6vw,74px);background:linear-gradient(180deg,#F5E2A8,#C9A24A 48%,#8C6420 54%,#E9CF8A);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 -1px 0 rgba(0,0,0,.6)) drop-shadow(0 1px 0 rgba(255,240,200,.35))}
+.m-wash{background:#FBF7F2}
+.m-wash svg{position:absolute;inset:0;width:100%;height:100%}
+.m-marq{background:#3A1514}
+.m-marq span{font-family:"Shrikhand",cursive;font-size:clamp(24px,3.2vw,38px);color:#FFE7B8;transform:rotate(-6deg);text-shadow:1px 1px 0 #F4A23A,2px 2px 0 #C46A35,3px 3px 0 #A65528,4px 4px 0 #7E3C1C,0 0 18px rgba(255,190,90,.6)}
+
+/* ---------- Direction header ---------- */
+.dir{padding-top:88px}
+.dir-head{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:20px 56px;align-items:end;padding-bottom:24px;margin-bottom:26px;border-bottom:1px solid var(--doc-rule)}
+.dir-name{font-size:clamp(44px,7vw,84px);line-height:.95;margin:8px 0 10px;font-weight:400}
+.dir-a .dir-name{font-family:"Rozha One",serif}
+.dir-b .dir-name{font-family:"Shrikhand",cursive;color:#7E3C1C;font-size:clamp(40px,6.4vw,76px)}
+.dir-c .dir-name{font-family:"Pinyon Script",cursive;font-size:clamp(50px,8vw,96px)}
+.dir-idea{font-size:21px;line-height:1.4;margin:0;font-style:italic;color:#3d3630}
+.moves{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.moves li{display:grid;grid-template-columns:132px 1fr;gap:12px;font-size:15.5px;line-height:1.4;padding-bottom:10px;border-bottom:1px dashed var(--doc-rule)}
+.moves li:last-child{border-bottom:0;padding-bottom:0}
+.moves .label{padding-top:3px;font-size:11px}
+
+/* Browser frame */
+.browser{container-type:inline-size;border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.08),0 40px 70px -40px rgba(40,25,10,.55)}
+.bar{display:flex;align-items:center;gap:6px;padding:9px 12px;background:#E3DDD3}
+.bar i{width:10px;height:10px;border-radius:50%;background:#C6BCAE}
+.bar .url{margin-left:10px;flex:0 1 300px;background:#F5F1EB;border-radius:6px;font:11px/1.6 var(--f-label);padding:2px 10px;color:var(--doc-mute);white-space:nowrap;overflow:hidden}
+.screen{container-type:inline-size;position:relative;overflow:hidden}
+.caption{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:12px}
+
+/* Detail row */
+.detail{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) 250px;gap:36px;margin-top:44px;align-items:start}
+.blk{display:grid;gap:12px;min-width:0}
+.blk + .blk{margin-top:28px}
+.sw{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.chip{display:grid;gap:6px}
+.chip span{display:block;height:58px;border-radius:3px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.chip b{font-size:14px;font-weight:600;line-height:1.2}
+.chip code{font:11.5px var(--f-label);color:var(--doc-mute)}
+.ty{display:grid;gap:14px}
+.ty-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:12px;padding-bottom:12px;border-bottom:1px solid var(--doc-rule)}
+.ty-row:last-child{border-bottom:0}
+.ty-row .s{line-height:1.1;overflow-wrap:anywhere}
+.ty-row .n{text-align:right;font-size:13px;color:var(--doc-mute);line-height:1.3}
+.ty-row .n b{display:block;color:var(--doc-ink);font-weight:600;font-size:14px}
+.panel{border-radius:6px;padding:22px;display:grid;gap:18px;justify-items:start;overflow:hidden}
+.phone{container-type:inline-size;width:100%;max-width:250px;justify-self:center;aspect-ratio:9/19;border-radius:38px;padding:9px;background:#1C1916;box-shadow:0 0 0 1px #000,0 30px 50px -30px rgba(30,20,10,.7)}
+.ps{container-type:inline-size;width:100%;height:100%;border-radius:30px;overflow:hidden;position:relative}
+
+/* =========================================================
+   DIRECTION A — LA GAZETTE (revised: light newsprint, stock photography, public-domain engravings)
+   ========================================================= */
+.gz{--p:#F8F6F1;--ink:#1A1A1A;--ink2:#67625B;--rule:#D3CEC4;--red:#B3261E;
+  background:var(--p);color:var(--ink);font-family:"IM Fell English",Georgia,serif;padding:2cqw 3.2cqw 2.4cqw;font-size:1.25cqw;line-height:1.38}
+.gz img{display:block;max-width:100%}
+.gz .eng{mix-blend-mode:multiply}
+.gz .bw{filter:grayscale(1) contrast(1.08)}
+.goldleaf{background:url("assets/gold-leaf.jpg") center/cover;-webkit-background-clip:text;background-clip:text;color:transparent}
+.gz-top{display:flex;justify-content:space-between;font-family:"Courier Prime",monospace;font-size:1cqw;text-transform:uppercase;letter-spacing:.1em;border-block:.15cqw solid var(--ink);padding-block:.5cqw}
+.gz-mast{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding-top:.8cqw}
+.gz-ear{display:flex;align-items:center;gap:.9cqw;font-family:"Courier Prime",monospace;font-size:.95cqw;text-transform:uppercase;letter-spacing:.08em;line-height:1.35;justify-self:start}
+.gz-ear img{height:7.5cqw;width:auto}
+.gz-ear.r{justify-self:end;text-align:right;border:.12cqw solid var(--ink);padding:.6cqw 1cqw;display:block}
+.gz-ear.r b{display:block;font-family:"Rozha One",serif;font-weight:400;font-size:1.5cqw;letter-spacing:.02em;color:var(--red)}
+.gz-logo{font-family:"Rozha One",serif;font-weight:400;font-size:13cqw;line-height:.88;letter-spacing:.05em;margin:0;filter:drop-shadow(0 .12cqw 0 rgba(0,0,0,.28))}
+.gz-tag{text-align:center;font-style:italic;font-size:1.35cqw;color:var(--ink2)}
+.gz-nav{display:flex;justify-content:center;gap:3.4cqw;border-top:.45cqw double var(--ink);border-bottom:.12cqw solid var(--ink);padding-block:.7cqw;margin-top:1cqw;font-family:"Courier Prime",monospace;text-transform:uppercase;font-size:1.05cqw;letter-spacing:.14em}
+.gz-nav .on{color:var(--red);font-weight:700}
+.gz-grid{display:grid;grid-template-columns:3fr 6fr 3.2fr;margin-top:1.6cqw}
+.gz-grid>*{padding-inline:1.6cqw;min-width:0}
+.gz-grid>*+*{border-left:.1cqw solid var(--rule)}
+.gz-grid>:first-child{padding-left:0}
+.gz-grid>:last-child{padding-right:0}
+.gz-kicker{font-family:"Courier Prime",monospace;font-size:.95cqw;text-transform:uppercase;letter-spacing:.16em;color:var(--red);border-bottom:.1cqw solid var(--ink);padding-bottom:.4cqw;margin-bottom:.9cqw}
+.gz-col h4{font-family:"Rozha One",serif;font-weight:400;font-size:2.1cqw;line-height:1.05;margin:0 0 .9cqw}
+.gz-photo{width:100%;object-fit:cover}
+.gz-credit{display:flex;justify-content:space-between;gap:1cqw;font-size:.95cqw;font-style:italic;color:var(--ink2);margin:.4cqw 0 .9cqw}
+.gz-credit span:last-child{font-family:"Courier Prime",monospace;font-style:normal;font-size:.75cqw;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.gz-col p{margin:0 0 .7cqw;text-align:justify;hyphens:auto}
+.dropcap::first-letter{font-family:"Rozha One",serif;float:left;font-size:3.9cqw;line-height:.8;padding:.35cqw .5cqw 0 0;color:var(--red)}
+.gz-cont{display:flex;align-items:center;gap:.6cqw;font-family:"Courier Prime",monospace;font-size:.9cqw;letter-spacing:.1em;text-transform:uppercase}
+.gz-cont img{width:4cqw}
+.gz-head{font-family:"Rozha One",serif;font-weight:400;font-size:4.5cqw;line-height:.98;text-align:center;margin:0}
+.gz-deck{text-align:center;font-style:italic;font-size:1.5cqw;color:var(--ink2);margin:.8cqw 2cqw 1.1cqw}
+.gz-lead .gz-photo{aspect-ratio:16/10.5;object-position:50% 78%}
+.gz-menu ul{list-style:none;margin:0;padding:0;display:grid;gap:1cqw}
+.gz-menu li{display:grid;grid-template-columns:4.6cqw 1fr;gap:.9cqw;align-items:center}
+.gz-menu li img{width:4.6cqw;height:4.6cqw;object-fit:cover}
+.gz-row{display:flex;align-items:baseline;gap:.5cqw;font-size:1.35cqw}
+.gz-row i{flex:1;border-bottom:.15cqw dotted var(--ink2)}
+.gz-row b{font-family:"Courier Prime",monospace}
+.gz-menu em{display:block;font-size:1cqw;color:var(--ink2)}
+.gz-order{display:grid;grid-template-columns:1fr auto;align-items:end;gap:.6cqw;margin-top:1.4cqw}
+.gz-order img{width:8.6cqw}
+.gz-stamp{width:max-content;border:.25cqw solid var(--red);color:var(--red);text-align:center;padding:.7cqw 1.3cqw;font-family:"Rozha One",serif;font-size:1.8cqw;line-height:1.1;transform:rotate(-4deg);outline:.12cqw solid var(--red);outline-offset:.35cqw;letter-spacing:.06em;text-transform:uppercase;margin:0 0 1.2cqw .4cqw}
+.gz-stamp small{display:block;font-family:"Courier Prime",monospace;font-size:.85cqw;letter-spacing:.14em}
+.gz-band{margin-top:2cqw;border-top:.45cqw double var(--ink);padding-top:1cqw}
+.gz-band-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1cqw}
+.gz-band-h h5{font-family:"Rozha One",serif;font-weight:400;font-size:2.2cqw;margin:0}
+.gz-band-h span{font-family:"Courier Prime",monospace;font-size:.95cqw;letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+.gz-essay{display:grid;grid-template-columns:.8fr 1.2fr 1fr 1fr;gap:1.4cqw}
+.gz-essay figure{margin:0;min-width:0}
+.gz-essay img{width:100%;aspect-ratio:4/5;object-fit:cover}
+.gz-essay img.eng{object-fit:contain;padding:.6cqw}
+.gz-essay figcaption{font-size:1cqw;font-style:italic;color:var(--ink2);margin-top:.4cqw;line-height:1.3}
+.gz-class{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2cqw;margin-top:2cqw;border-top:.12cqw solid var(--ink);padding-top:1.2cqw}
+.gz-class>div{border:.1cqw solid var(--ink);padding:.9cqw 1cqw;font-size:1.05cqw;display:grid;grid-template-columns:1fr auto;gap:.8cqw;align-items:center}
+.gz-class h5{font-family:"Rozha One",serif;font-weight:400;font-size:1.45cqw;margin:.1cqw 0 .3cqw}
+.gz-class .k{font-family:"Courier Prime",monospace;font-size:.85cqw;letter-spacing:.14em;color:var(--red)}
+.gz-class img{width:5cqw;height:5cqw;object-fit:cover}
+.gz-class img.eng{object-fit:contain}
+.gz-orn{display:block;width:22cqw;margin:2cqw auto 0;opacity:.85}
+
+/* A — phone */
+.gz-m{background:#F8F6F1;color:#1A1A1A;font-family:"IM Fell English",Georgia,serif;padding:12cqw 5.5cqw 5cqw;font-size:4.4cqw;line-height:1.35}
+.gz-m img{display:block;max-width:100%}
+.gz-m .t{display:flex;justify-content:space-between;font-family:"Courier Prime",monospace;font-size:3cqw;text-transform:uppercase;letter-spacing:.08em;border-block:.5cqw solid #1A1A1A;padding-block:1.2cqw}
+.gz-m .lg{font-family:"Rozha One",serif;font-size:27cqw;line-height:.95;text-align:center;margin-top:2cqw;letter-spacing:.04em;filter:drop-shadow(0 .4cqw 0 rgba(0,0,0,.25))}
+.gz-m .tg{text-align:center;font-style:italic;font-size:3.6cqw;color:#67625B}
+.gz-m .nv{display:flex;justify-content:space-between;font-family:"Courier Prime",monospace;font-size:3.2cqw;text-transform:uppercase;letter-spacing:.1em;border-top:1.4cqw double #1A1A1A;border-bottom:.4cqw solid #1A1A1A;padding-block:1.6cqw;margin-top:2.5cqw}
+.gz-m .nv b{color:#B3261E}
+.gz-m h4{font-family:"Rozha One",serif;font-weight:400;font-size:8.6cqw;line-height:1;text-align:center;margin:4cqw 0 3cqw}
+.gz-m .ph{width:100%;aspect-ratio:4/3;object-fit:cover;object-position:50% 78%}
+.gz-m .cr{font-family:"Courier Prime",monospace;font-size:2.4cqw;letter-spacing:.06em;text-transform:uppercase;color:#67625B;text-align:right;margin-top:1cqw}
+.gz-m .k{font-family:"Courier Prime",monospace;font-size:3cqw;text-transform:uppercase;letter-spacing:.14em;color:#B3261E;border-bottom:.3cqw solid #1A1A1A;padding-bottom:1cqw;margin:4cqw 0 2.4cqw}
+.gz-m .r{display:grid;grid-template-columns:12cqw 1fr;gap:3cqw;align-items:center;margin-bottom:2.4cqw}
+.gz-m .r img{width:12cqw;height:12cqw;object-fit:cover}
+.gz-m .r div{display:flex;gap:1.5cqw;align-items:baseline}
+.gz-m .r i{flex:1;border-bottom:.5cqw dotted #67625B}
+.gz-m .r b{font-family:"Courier Prime",monospace}
+
+/* A — component panel + image library (px) */
+.pa{background:#F8F6F1;color:#1A1A1A;box-shadow:inset 0 0 0 1px #D3CEC4}
+.pa .eng{mix-blend-mode:multiply}
+.pa-stamp{border:3px solid #B3261E;outline:1.5px solid #B3261E;outline-offset:4px;color:#B3261E;font-family:"Rozha One",serif;font-size:22px;letter-spacing:.06em;text-transform:uppercase;padding:6px 18px;transform:rotate(-4deg);margin:6px 0 4px 6px;line-height:1.15;text-align:center}
+.pa-item{display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:center;width:100%}
+.pa-item img{width:52px;height:52px;object-fit:cover;display:block}
+.pa-item em{font-family:"IM Fell English",serif;font-size:14px;color:#67625B}
+.pa-extra{background:#1A1A1A;color:#F8F6F1;font-family:"Rozha One",serif;font-size:18px;padding:2px 12px;letter-spacing:.08em}
+.pa-kick{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#B3261E;border-bottom:1px solid #1A1A1A;padding-bottom:4px;width:100%}
+.pa-link{display:flex;align-items:center;gap:10px;font-family:"Courier Prime",monospace;font-size:13px;letter-spacing:.12em;text-transform:uppercase}
+.pa-link img{width:46px;display:block}
+.pa-stamp small{display:block;font-family:"Courier Prime",monospace;font-size:10px;letter-spacing:.16em}
+.pa-row{display:flex;gap:8px;align-items:baseline;font-family:"IM Fell English",serif;font-size:19px}
+.pa-row i{flex:1;border-bottom:2px dotted #67625B}
+.pa-row b{font-family:"Courier Prime",monospace}
+.lib{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;margin-top:44px}
+.lib-set{display:grid;gap:12px;align-content:start}
+.lib-set p{margin:0;font-size:15.5px;color:#3d3630}
+.lib-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.lib-grid figure{margin:0;display:grid;gap:4px}
+.lib-grid img{width:100%;aspect-ratio:1;object-fit:cover;display:block;background:#F8F6F1}
+.lib-grid img.eng{object-fit:contain;padding:6px;box-shadow:inset 0 0 0 1px #D3CEC4}
+.lib-grid img.bw{filter:grayscale(1) contrast(1.08)}
+.lib-grid figcaption{font-family:var(--f-label);font-size:10.5px;color:var(--doc-mute);line-height:1.3}
+@media (max-width:720px){ .lib{grid-template-columns:minmax(0,1fr)} }
+
+/* =========================================================
+   DIRECTION B — LE CINÉMA
+   ========================================================= */
+.cn{--n:#120D0A;--v:#3A1514;--am:#F4A23A;--cu:#C46A35;--gold:#E3C27A;--cr:#F3E6CF;--pk:#E9A9A0;
+  background:radial-gradient(110% 80% at 74% 38%,#4A2414 0%,#24120C 38%,var(--n) 70%);color:var(--cr);font-family:"Cormorant Garamond",Georgia,serif;font-size:1.35cqw;line-height:1.4}
+.cn::after{content:"";position:absolute;inset:0;background:var(--grain);opacity:.5;mix-blend-mode:overlay;pointer-events:none}
+.bokeh span{position:absolute;border-radius:50%;filter:blur(.35cqw);background:radial-gradient(circle at 40% 40%,rgba(255,226,170,.85),rgba(244,162,58,.3) 58%,transparent 70%)}
+.bokeh span.p{background:radial-gradient(circle at 40% 40%,rgba(255,210,205,.75),rgba(233,169,160,.25) 58%,transparent 70%)}
+.bokeh span.c{background:radial-gradient(circle at 40% 40%,rgba(230,140,80,.7),rgba(196,106,53,.25) 58%,transparent 70%)}
+.cn-nav{position:relative;display:flex;justify-content:space-between;align-items:center;padding:1.6cqw 4cqw;font-family:"Cinzel",serif;font-size:1cqw;letter-spacing:.2em;text-transform:uppercase}
+.cn-nav div{display:flex;gap:2.6cqw;opacity:.85}
+.cn-mini{font-family:"Shrikhand",cursive;font-size:2.2cqw;letter-spacing:0;text-transform:none;color:var(--am);text-shadow:0 0 1.5cqw rgba(244,162,58,.5)}
+.cn-ticket{border:.12cqw dashed var(--gold);padding:.6cqw 1.3cqw;color:var(--gold)}
+.cn-hero{position:relative;display:grid;grid-template-columns:1.05fr 1fr;align-items:center;padding:1.4cqw 4cqw 3.4cqw;gap:2cqw}
+.cn-marquee{position:relative;display:inline-block;padding:1.5cqw 3.4cqw 2cqw;border:.75cqw dotted #FFD98A;border-radius:1.6cqw;background:linear-gradient(180deg,#4E1C17,#280D0B);box-shadow:0 0 0 .55cqw #280D0B,0 0 0 .75cqw var(--cu),0 0 5cqw rgba(244,162,58,.38),inset 0 0 3cqw rgba(0,0,0,.6);text-align:center}
+.cn-pre{display:block;font-family:"Cinzel",serif;font-size:1cqw;letter-spacing:.35em;color:var(--gold);text-transform:uppercase}
+.cn-marquee h3{font-family:"Shrikhand",cursive;font-weight:400;font-size:9cqw;line-height:1.05;margin:.2cqw 0 .6cqw;color:#FFE7B8;transform:rotate(-4deg);
+  text-shadow:.12cqw .12cqw 0 #F4A23A,.24cqw .24cqw 0 #E08A2E,.36cqw .36cqw 0 #C46A35,.48cqw .48cqw 0 #A65528,.6cqw .6cqw 0 #7E3C1C,.72cqw .72cqw 0 #5A2A14,0 0 3cqw rgba(255,190,90,.6)}
+.goldtxt{background:linear-gradient(180deg,#F8E7B5,#E3C27A 45%,#9C7430 55%,#E9CF8A);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cn-sub{display:block;font-family:"Cinzel",serif;font-weight:700;font-size:1.35cqw;letter-spacing:.22em;text-transform:uppercase}
+.cn-copy p{font-size:1.75cqw;line-height:1.4;max-width:36cqw;margin:2.4cqw 0;font-style:italic;color:rgba(243,230,207,.86)}
+.cn-ctas{display:flex;gap:2cqw;align-items:center}
+.btn-amber{background:linear-gradient(180deg,#FFC66B,#F4A23A 52%,#D9822A);color:#2A0E0C;font-family:"Cinzel",serif;font-weight:700;font-size:1.1cqw;letter-spacing:.14em;text-transform:uppercase;padding:1.1cqw 2.3cqw;border-radius:10cqw;box-shadow:0 0 2.6cqw rgba(244,162,58,.55),inset 0 .15cqw 0 rgba(255,255,255,.6)}
+.btn-ghost{font-family:"Cinzel",serif;font-size:1.05cqw;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.cn-stage{position:relative;height:36cqw;display:grid;place-items:end center}
+.cn-spot{position:absolute;inset:-8cqw 0 -2cqw;background:conic-gradient(from 0deg at 50% 0%,transparent 0 158deg,rgba(255,214,150,.30) 172deg,rgba(255,224,170,.42) 180deg,rgba(255,214,150,.30) 188deg,transparent 202deg 360deg);filter:blur(1.2cqw)}
+.cn-floor{position:absolute;bottom:0;left:12%;right:12%;height:5cqw;background:radial-gradient(ellipse at center,rgba(244,162,58,.45),transparent 70%)}
+.cn-stage svg{position:relative;width:21cqw;height:auto;margin-bottom:1.6cqw;filter:drop-shadow(0 1.6cqw 1.6cqw rgba(0,0,0,.6))}
+.cn-temp{position:absolute;right:2cqw;top:6cqw;font-family:"Cinzel",serif;font-size:.95cqw;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);text-align:right;line-height:1.7}
+.cn-temp b{font-family:"Cormorant Garamond",serif;font-size:2.6cqw;letter-spacing:0;color:var(--cr);display:block;line-height:1}
+.cn-strip{position:relative;background:#0B0806;padding:1.6cqw 4cqw 2.4cqw;border-top:.12cqw solid rgba(227,194,122,.3)}
+.cn-strip-h{display:flex;justify-content:space-between;align-items:baseline;font-family:"Cinzel",serif;font-size:1.6cqw;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.8cqw}
+.cn-strip-h span{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:1.35cqw;letter-spacing:0;text-transform:none;color:var(--cr);opacity:.7}
+.cn-reel{display:grid;grid-template-columns:repeat(4,1fr);gap:1.4cqw;padding-block:1.6cqw;
+  background:repeating-linear-gradient(90deg,rgba(243,230,207,.22) 0 1cqw,transparent 1cqw 2.2cqw) top/100% .7cqw no-repeat,repeating-linear-gradient(90deg,rgba(243,230,207,.22) 0 1cqw,transparent 1cqw 2.2cqw) bottom/100% .7cqw no-repeat}
+.cn-poster{aspect-ratio:3/3.6;border-radius:.4cqw;padding:1.2cqw;display:flex;flex-direction:column;justify-content:space-between;align-items:center;text-align:center;box-shadow:inset 0 0 0 .12cqw rgba(227,194,122,.45),0 1.5cqw 2cqw -1cqw rgba(0,0,0,.7)}
+.cn-poster .pre{font-family:"Cinzel",serif;font-size:.8cqw;letter-spacing:.25em;text-transform:uppercase;opacity:.8}
+.cn-poster svg{width:7cqw;height:auto;filter:drop-shadow(0 .8cqw .8cqw rgba(0,0,0,.5))}
+.cn-poster h5{margin:0;font-family:"Cinzel",serif;font-weight:700;font-size:1.35cqw;letter-spacing:.08em;line-height:1.15}
+.cn-poster .meta{font-size:1.05cqw;font-style:italic;opacity:.85}
+.p1{background:radial-gradient(circle at 50% 40%,#6A2A16,#1E0E09 75%)}
+.p2{background:radial-gradient(circle at 50% 40%,#5A1A22,#1A0A0C 75%)}
+.p3{background:radial-gradient(circle at 50% 40%,#6B3A2E,#1C100D 75%)}
+.p4{background:radial-gradient(circle at 50% 40%,#4F3418,#17100A 75%)}
+
+/* B — phone */
+.cn-m{background:radial-gradient(120% 60% at 60% 45%,#4A2414,#120D0A 70%);color:#F3E6CF;font-family:"Cormorant Garamond",Georgia,serif;font-size:4.6cqw;padding-top:12cqw;text-align:center}
+.cn-m .nv{display:flex;justify-content:space-between;align-items:center;padding:0 6cqw;font-family:"Cinzel",serif;font-size:3cqw;letter-spacing:.15em;color:#E3C27A}
+.cn-m .nv span{font-family:"Shrikhand",cursive;font-size:6cqw;color:#F4A23A;letter-spacing:0}
+.cn-m .mq{display:inline-block;margin-top:7cqw;padding:3cqw 7cqw 4cqw;border:2.2cqw dotted #FFD98A;border-radius:4cqw;background:linear-gradient(180deg,#4E1C17,#280D0B);box-shadow:0 0 0 1.6cqw #280D0B,0 0 0 2.2cqw #C46A35,0 0 12cqw rgba(244,162,58,.4)}
+.cn-m .mq small{display:block;font-family:"Cinzel",serif;font-size:2.6cqw;letter-spacing:.3em;color:#E3C27A}
+.cn-m .mq b{display:block;font-family:"Shrikhand",cursive;font-weight:400;font-size:20cqw;line-height:1.1;color:#FFE7B8;transform:rotate(-4deg);text-shadow:.4cqw .4cqw 0 #F4A23A,.8cqw .8cqw 0 #C46A35,1.2cqw 1.2cqw 0 #A65528,1.6cqw 1.6cqw 0 #7E3C1C,0 0 8cqw rgba(255,190,90,.6)}
+.cn-m .st{position:relative;height:56cqw;display:grid;place-items:end center;margin-top:3cqw}
+.cn-m .st::before{content:"";position:absolute;inset:-6cqw 0 0;background:conic-gradient(from 0deg at 50% 0%,transparent 0 160deg,rgba(255,220,160,.35) 180deg,transparent 200deg 360deg);filter:blur(3cqw)}
+.cn-m .st svg{position:relative;width:40cqw;height:auto;filter:drop-shadow(0 4cqw 4cqw rgba(0,0,0,.6))}
+.cn-m p{font-style:italic;margin:4cqw 8cqw;line-height:1.35}
+.cn-m .bt{display:inline-block;background:linear-gradient(180deg,#FFC66B,#F4A23A 52%,#D9822A);color:#2A0E0C;font-family:"Cinzel",serif;font-weight:700;font-size:3.2cqw;letter-spacing:.12em;padding:3.2cqw 7cqw;border-radius:20cqw;box-shadow:0 0 8cqw rgba(244,162,58,.55)}
+
+/* =========================================================
+   DIRECTION C — L'ATELIER
+   ========================================================= */
+.at{--w:#FBF7F2;--bl:#F4DAD6;--pk:#E8B4B0;--cg:#A9B1BA;--cg2:#DCE1E6;--ink:#2F3A48;--gold:#B8913F;
+  background:var(--grain),var(--w);color:var(--ink);font-family:"Spectral",Georgia,serif;font-size:1.3cqw;padding:2.2cqw 4cqw 3cqw;text-align:center;line-height:1.45}
+.at-nav{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;font-family:"Bodoni Moda",Didot,serif;font-size:1cqw;letter-spacing:.26em;text-transform:uppercase}
+.at-nav div{display:flex;gap:2.6cqw}
+.at-nav div:first-child{justify-content:flex-end;padding-right:4cqw}
+.at-nav div:last-child{justify-content:flex-start;padding-left:4cqw}
+.at-logo{font-family:"Pinyon Script",cursive;font-size:3.6cqw;text-transform:none;letter-spacing:0;line-height:1;position:relative;padding-bottom:.4cqw}
+.at-logo::after{content:"";position:absolute;left:15%;right:15%;bottom:0;height:.14cqw;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.at-pre{font-family:"Pinyon Script",cursive;font-size:2.8cqw;line-height:1;margin-top:2.6cqw;color:#7A6A5A}
+.at-h{font-family:"Bodoni Moda",Didot,serif;font-weight:400;font-size:5.4cqw;line-height:1;margin:.2cqw 0 0;letter-spacing:.02em}
+.at-h em{font-style:italic;color:var(--gold)}
+.at-hero{display:grid;grid-template-columns:1fr 2.3fr 1fr;align-items:center;gap:2.4cqw;margin-top:1.2cqw}
+.at-side{display:grid;gap:.7cqw;justify-items:center;padding:1.6cqw 1cqw;border-top:.12cqw solid var(--ink);border-bottom:.12cqw solid var(--ink);position:relative}
+.at-side::before{content:"";position:absolute;inset:-2cqw -1cqw;background:radial-gradient(ellipse at center,rgba(220,225,230,.9),transparent 70%);z-index:-1}
+.at-side .s{font-family:"Pinyon Script",cursive;font-size:2.6cqw;line-height:1}
+.at-side .c{font-family:"Bodoni Moda",serif;font-size:.9cqw;letter-spacing:.26em;text-transform:uppercase;color:#6E7884}
+.at-side p{font-size:1.15cqw;margin:0;line-height:1.5;color:#55606E}
+.at-side b{font-family:"Bodoni Moda",serif;font-weight:400;font-size:2cqw}
+.at-hero svg{width:100%;height:auto;display:block}
+.at-btn{display:inline-block;border:.12cqw solid var(--gold);padding:.35cqw;border-radius:10cqw;margin-top:1.4cqw}
+.at-btn span{display:block;background:var(--ink);color:var(--w);padding:1cqw 3cqw;border-radius:10cqw;font-family:"Bodoni Moda",serif;font-size:1.05cqw;letter-spacing:.24em;text-transform:uppercase}
+.at-orn{display:flex;align-items:center;gap:1.4cqw;justify-content:center;margin:2.6cqw auto 0;font-family:"Bodoni Moda",serif;font-size:1cqw;letter-spacing:.3em;text-transform:uppercase;color:#6E7884}
+.at-orn::before,.at-orn::after{content:"";width:12cqw;height:.1cqw;background:var(--ink);opacity:.5}
+.at-vit{display:grid;grid-template-columns:repeat(3,1fr);gap:3cqw;margin-top:2cqw;padding-inline:3cqw}
+.at-card{border:.12cqw solid var(--ink);border-radius:13cqw 13cqw .5cqw .5cqw;padding:1.2cqw 1.2cqw 1.8cqw;background:var(--w);position:relative}
+.at-card .arch{border-radius:12cqw 12cqw .3cqw .3cqw;aspect-ratio:1/1.05;display:grid;place-items:center;border:.1cqw solid rgba(47,58,72,.35);overflow:hidden}
+.at-card .arch svg{width:55%;height:auto}
+.w1{background:radial-gradient(ellipse at 45% 55%,rgba(232,180,176,.75),rgba(244,218,214,.4) 60%,transparent 80%),var(--w)}
+.w2{background:radial-gradient(ellipse at 50% 60%,rgba(169,177,186,.65),rgba(220,225,230,.4) 60%,transparent 80%),var(--w)}
+.w3{background:radial-gradient(ellipse at 55% 50%,rgba(184,145,63,.32),rgba(244,218,214,.45) 60%,transparent 80%),var(--w)}
+.at-card .nm{font-family:"Pinyon Script",cursive;font-size:3cqw;line-height:1;margin-top:1.2cqw}
+.at-card .ds{font-size:1.1cqw;color:#55606E;margin:.4cqw 0 .6cqw}
+.at-card .pr{font-family:"Bodoni Moda",serif;font-size:1.3cqw;letter-spacing:.12em}
+
+/* C — phone */
+.at-m{background:var(--grain),#FBF7F2;color:#2F3A48;font-family:"Spectral",Georgia,serif;font-size:4.4cqw;text-align:center;padding:12cqw 6cqw 6cqw}
+.at-m .nv{display:flex;justify-content:space-between;align-items:center;font-family:"Bodoni Moda",serif;font-size:2.8cqw;letter-spacing:.2em;text-transform:uppercase}
+.at-m .nv b{font-family:"Pinyon Script",cursive;font-weight:400;font-size:10cqw;letter-spacing:0;text-transform:none}
+.at-m .pre{font-family:"Pinyon Script",cursive;font-size:8cqw;margin-top:5cqw;color:#7A6A5A;line-height:1}
+.at-m h4{font-family:"Bodoni Moda",serif;font-weight:400;font-size:11cqw;line-height:1;margin:1cqw 0 3cqw}
+.at-m h4 em{color:#B8913F}
+.at-m svg.f{width:100%;height:auto;display:block}
+.at-m .bt{display:inline-block;border:.4cqw solid #B8913F;padding:1cqw;border-radius:20cqw;margin:4cqw 0 6cqw}
+.at-m .bt span{display:block;background:#2F3A48;color:#FBF7F2;padding:2.8cqw 8cqw;border-radius:20cqw;font-family:"Bodoni Moda",serif;font-size:3cqw;letter-spacing:.2em;text-transform:uppercase}
+.at-m .cd{border:.4cqw solid #2F3A48;border-radius:40cqw 40cqw 2cqw 2cqw;padding:3cqw;margin-inline:8cqw}
+.at-m .cd .arch{border-radius:36cqw 36cqw 1cqw 1cqw;aspect-ratio:1;display:grid;place-items:center;background:radial-gradient(ellipse at 45% 55%,rgba(232,180,176,.75),rgba(244,218,214,.4) 60%,transparent 80%)}
+.at-m .cd .arch svg{width:55%;height:auto}
+.at-m .cd b{display:block;font-family:"Pinyon Script",cursive;font-weight:400;font-size:9cqw;margin-top:2cqw}
+
+/* ---------- Component panels (px) ---------- */
+.pb{background:radial-gradient(100% 90% at 70% 20%,#3E1D11,#120D0A 70%);color:#F3E6CF}
+.pb .btn-amber{font-size:13px;padding:12px 24px;border-radius:99px;box-shadow:0 0 26px rgba(244,162,58,.55),inset 0 2px 0 rgba(255,255,255,.6)}
+.pb-ticket{display:grid;grid-template-columns:auto 1fr;align-items:center;background:linear-gradient(180deg,#F3E6CF,#E3C99A);color:#3A1514;border-radius:4px;font-family:"Cinzel",serif;-webkit-mask:radial-gradient(circle 9px at 0 50%,transparent 98%,#000) left/51% 100% no-repeat,radial-gradient(circle 9px at 100% 50%,transparent 98%,#000) right/51% 100% no-repeat;mask:radial-gradient(circle 9px at 0 50%,transparent 98%,#000) left/51% 100% no-repeat,radial-gradient(circle 9px at 100% 50%,transparent 98%,#000) right/51% 100% no-repeat}
+.pb-ticket span{padding:12px 16px;font-weight:700;font-size:12px;letter-spacing:.2em;writing-mode:vertical-rl;transform:rotate(180deg);border-left:2px dashed rgba(58,21,20,.4)}
+.pb-ticket div{padding:10px 22px 10px 16px;font-size:12px;letter-spacing:.14em;line-height:1.5}
+.pb-ticket div b{display:block;font-size:17px;letter-spacing:.06em}
+.pb-chip{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:17px;border:1px solid rgba(227,194,122,.5);border-radius:99px;padding:4px 14px;color:#E3C27A}
+.pb-script{font-family:"Shrikhand",cursive;font-size:40px;color:#FFE7B8;transform:rotate(-5deg);text-shadow:1px 1px 0 #F4A23A,2px 2px 0 #C46A35,3px 3px 0 #A65528,4px 4px 0 #7E3C1C,0 0 20px rgba(255,190,90,.55);line-height:1.2;padding-left:4px}
+.pc{background:var(--grain),#FBF7F2;color:#2F3A48}
+.pc-btn{border:1px solid #B8913F;padding:4px;border-radius:99px}
+.pc-btn span{display:block;background:#2F3A48;color:#FBF7F2;padding:10px 26px;border-radius:99px;font-family:"Bodoni Moda",serif;font-size:12px;letter-spacing:.24em;text-transform:uppercase}
+.pc-arch{display:flex;gap:16px;align-items:end}
+.pc-arch div{width:96px;aspect-ratio:1/1.2;border:1px solid #2F3A48;border-radius:60px 60px 3px 3px;display:grid;place-items:center;background:radial-gradient(ellipse at 45% 55%,rgba(232,180,176,.75),rgba(244,218,214,.3) 60%,transparent 80%)}
+.pc-arch div svg{width:55%;height:auto}
+.pc-arch p{margin:0;font-family:"Pinyon Script",cursive;font-size:34px;line-height:1}
+.pc-arch p small{display:block;font-family:"Bodoni Moda",serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;margin-top:6px}
+.pc-tag{font-family:"Pinyon Script",cursive;font-size:26px;padding:2px 22px;background:radial-gradient(ellipse at center,rgba(232,180,176,.8),transparent 72%)}
+
+/* ---------- Comparison ---------- */
+.cmp-wrap{overflow-x:auto;background:var(--doc-card);border-radius:6px;box-shadow:0 0 0 1px var(--doc-rule)}
+.cmp{width:100%;border-collapse:collapse;min-width:640px;font-size:15.5px}
+.cmp th,.cmp td{padding:12px 18px;text-align:left;border-bottom:1px solid var(--doc-rule)}
+.cmp thead th{vertical-align:bottom;padding-top:18px}
+.cmp thead th .hn{display:block;font-size:24px;font-weight:400;line-height:1.1;margin-top:4px}
+.cmp thead th:nth-child(2) .hn{font-family:"Rozha One",serif}
+.cmp thead th:nth-child(3) .hn{font-family:"Shrikhand",cursive;color:#7E3C1C;font-size:22px}
+.cmp thead th:nth-child(4) .hn{font-family:"Pinyon Script",cursive;font-size:32px}
+.cmp .grp td{background:#E7E1D7;font-family:var(--f-label);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--doc-mute);padding-block:8px}
+.cmp tbody tr:last-child td{border-bottom:0}
+.m{display:inline-flex;gap:5px;vertical-align:middle}
+.m i{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--doc-ink)}
+.m[data-v="1"] i:nth-child(-n+1),.m[data-v="2"] i:nth-child(-n+2),.m[data-v="3"] i:nth-child(-n+3){background:var(--doc-ink)}
+.cmp td small{display:block;color:var(--doc-mute);font-size:13px;line-height:1.3;margin-top:3px}
+.legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:10px;font-size:13.5px;color:var(--doc-mute)}
+.legend span{display:inline-flex;gap:8px;align-items:center}
+
+/* ---------- Recommendation ---------- */
+.rec{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:40px;align-items:start}
+.rec-card{background:#2A2119;color:#EFE4CC;border-radius:6px;padding:30px;display:grid;gap:14px;background-image:var(--grain)}
+.rec-card .label{color:#C9A24A}
+.rec-card h3{font-family:"Rozha One",serif;font-weight:400;font-size:clamp(30px,4vw,44px);line-height:1.05;margin:0}
+
+.rec-card p{margin:0;color:#D8CCB2}
+.borrow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
+.borrow div{border:1px solid rgba(201,162,74,.35);border-radius:4px;padding:12px 14px;font-size:14.5px;line-height:1.4;color:#D8CCB2}
+.borrow b{display:block;color:#EFE4CC;font-weight:600;margin-bottom:2px}
+.why{list-style:none;padding:0;margin:0;display:grid;gap:16px}
+.why li{display:grid;grid-template-columns:28px 1fr;gap:10px;font-size:16px}
+.why li::before{content:"✓";font-family:var(--f-label);color:var(--doc-accent);font-size:18px;line-height:1.4}
+.why b{font-weight:600}
+.decide{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+.opt{border:1px solid var(--doc-rule);background:var(--doc-card);border-radius:6px;padding:14px 16px;display:grid;gap:4px;font-size:14.5px;line-height:1.35}
+.opt b{font-size:17px;font-weight:600}
+.opt.rec-o{border:2px solid var(--doc-accent)}
+.opt .label{font-size:10.5px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:22px;counter-reset:s}
+.steps div{border-top:2px solid var(--doc-ink);padding:12px 16px 0 0;font-size:15px;line-height:1.4;counter-increment:s}
+.steps div::before{content:counter(s);display:block;font-family:var(--f-label);font-size:12px;color:var(--doc-accent);margin-bottom:4px}
+.steps b{display:block;font-weight:600;font-size:16.5px}
+.credits{margin-top:56px;font-size:13px;color:var(--doc-mute)}
+.credits summary{cursor:pointer}
+.credits ul{columns:2;column-gap:32px;padding-left:18px;margin:10px 0 0}
+@media (max-width:720px){.credits ul{columns:1}}
+.foot{margin-top:72px;padding-top:18px;border-top:1px solid var(--doc-rule);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--doc-mute);font-size:14px}
+
+/* ---------- Responsive ---------- */
+@media (max-width:980px){
+  .detail{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .detail .phone-col{grid-column:1 / -1}
+  .mats{grid-template-columns:repeat(3,1fr)}
+  .decide,.steps{grid-template-columns:1fr 1fr}
+  .steps{row-gap:20px}
+}
+@media (max-width:720px){
+  body{font-size:16px}
+  .covers,.sec-head,.dir-head,.rec,.detail{grid-template-columns:minmax(0,1fr)}
+  .mats{grid-template-columns:repeat(2,1fr)}
+  .moves li{grid-template-columns:1fr;gap:2px}
+  .borrow{grid-template-columns:1fr}
+}
+@media (max-width:440px){ .decide,.steps{grid-template-columns:1fr} .sw{grid-template-columns:repeat(2,1fr)} }
+@media (prefers-reduced-motion:reduce){ .cv{transition:none} }
+</style>
+
+<!-- ================= SVG library ================= -->
+<svg class="defs" aria-hidden="true" focusable="false">
+<defs>
+  <pattern id="awn" width="40" height="10" patternUnits="userSpaceOnUse"><rect width="20" height="10" fill="#E8B4B0"/><rect x="20" width="20" height="10" fill="#FBF7F2"/></pattern>
+  <linearGradient id="fryG" x1="0" x2="1"><stop offset="0" stop-color="#8A4A14"/><stop offset=".22" stop-color="#E39A34"/><stop offset=".45" stop-color="#FFE0A0"/><stop offset=".62" stop-color="#F2B04C"/><stop offset="1" stop-color="#A85A1A"/></linearGradient>
+  <linearGradient id="coneG" x1="0" x2="1"><stop offset="0" stop-color="#3A1110"/><stop offset=".35" stop-color="#9A3029"/><stop offset=".5" stop-color="#B8443A"/><stop offset=".7" stop-color="#7A2420"/><stop offset="1" stop-color="#2A0C0B"/></linearGradient>
+  <linearGradient id="rimG" x1="0" x2="1"><stop offset="0" stop-color="#8C6420"/><stop offset=".4" stop-color="#F5E2A8"/><stop offset=".6" stop-color="#E3C27A"/><stop offset="1" stop-color="#7A561A"/></linearGradient>
+  <linearGradient id="goldleaf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F5E2A8"/><stop offset=".5" stop-color="#D2AE58"/><stop offset=".56" stop-color="#9A7430"/><stop offset="1" stop-color="#E9CF8A"/></linearGradient>
+  <filter id="wc" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="3" seed="4" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="14" xChannelSelector="R" yChannelSelector="G"/><feGaussianBlur stdDeviation="1.2"/></filter>
+  <filter id="sk" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".02" numOctaves="2" seed="9" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="4" xChannelSelector="R" yChannelSelector="G"/></filter>
+</defs>
+
+
+<!-- Glossy CGI-style cone (Direction B) -->
+<symbol id="fries-gloss" viewBox="0 0 200 262">
+  <g stroke="#6A340E" stroke-width="1">
+    <g fill="url(#fryG)">
+      <rect x="70" y="48" width="15" height="102" rx="3" transform="rotate(6 77 150)"/>
+      <rect x="103" y="34" width="15" height="116" rx="3" transform="rotate(-6 110 150)"/>
+      <rect x="120" y="50" width="15" height="100" rx="3" transform="rotate(-2 127 150)"/>
+      <rect x="46" y="58" width="15" height="92" rx="3" transform="rotate(-16 53 150)"/>
+      <rect x="62" y="36" width="15" height="114" rx="3" transform="rotate(-8 69 150)"/>
+      <rect x="79" y="22" width="15" height="128" rx="3" transform="rotate(-3 86 150)"/>
+      <rect x="95" y="12" width="15" height="138" rx="3" transform="rotate(2 102 150)"/>
+      <rect x="111" y="24" width="15" height="126" rx="3" transform="rotate(7 118 150)"/>
+      <rect x="127" y="38" width="15" height="112" rx="3" transform="rotate(12 134 150)"/>
+      <rect x="143" y="56" width="15" height="94" rx="3" transform="rotate(18 150 150)"/>
+    </g>
+    <g fill="#fff" stroke="none" opacity=".55">
+      <rect x="83" y="26" width="2.5" height="80" rx="1" transform="rotate(-3 86 150)"/>
+      <rect x="99" y="16" width="2.5" height="90" rx="1" transform="rotate(2 102 150)"/>
+      <rect x="115" y="28" width="2.5" height="80" rx="1" transform="rotate(7 118 150)"/>
+      <rect x="66" y="40" width="2.5" height="70" rx="1" transform="rotate(-8 69 150)"/>
+      <rect x="131" y="42" width="2.5" height="66" rx="1" transform="rotate(12 134 150)"/>
+    </g>
+    <g fill="#fff" stroke="none"><rect x="88" y="30" width="3" height="3" transform="rotate(20 89 31)"/><rect x="104" y="20" width="2.5" height="2.5"/><rect x="120" y="36" width="3" height="3" transform="rotate(40 121 37)"/><rect x="72" y="50" width="2.5" height="2.5"/><rect x="138" y="52" width="2.5" height="2.5"/></g>
+    <path d="M24 116 Q100 136 176 116 L104 254 Q100 260 96 254 Z" fill="url(#coneG)" stroke="#2A0C0B"/>
+    <path d="M24 116 Q100 136 176 116 L170 128 Q100 148 30 128 Z" fill="url(#rimG)" stroke="none"/>
+    <path d="M58 142 Q68 190 94 238" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".28"/>
+    <circle cx="100" cy="176" r="19" fill="url(#rimG)" stroke="#5A3A10"/>
+    <text x="100" y="185" text-anchor="middle" font-family="Shrikhand, cursive" font-size="24" fill="#3A1110" stroke="none">G</text>
+  </g>
+</symbol>
+
+<!-- Watercolor + ink cone (Direction C) -->
+<symbol id="fries-wash" viewBox="0 0 200 262">
+  <g filter="url(#wc)" opacity=".9">
+    <path d="M44 150 L52 54 L96 10 L150 50 L160 150 Z" fill="#F3D79A"/>
+    <path d="M24 116 Q100 136 176 116 L104 254 Q100 260 96 254 Z" fill="#E8B4B0"/>
+    <path d="M100 128 Q140 128 176 116 L104 254 Z" fill="#A9B1BA" opacity=".6"/>
+  </g>
+  <g filter="url(#sk)" fill="none" stroke="#2F3A48" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
+    <rect x="46" y="58" width="15" height="92" rx="2" transform="rotate(-16 53 150)"/>
+    <rect x="62" y="36" width="15" height="114" rx="2" transform="rotate(-8 69 150)"/>
+    <rect x="79" y="22" width="15" height="128" rx="2" transform="rotate(-3 86 150)"/>
+    <rect x="95" y="12" width="15" height="138" rx="2" transform="rotate(2 102 150)"/>
+    <rect x="111" y="24" width="15" height="126" rx="2" transform="rotate(7 118 150)"/>
+    <rect x="127" y="38" width="15" height="112" rx="2" transform="rotate(12 134 150)"/>
+    <rect x="143" y="56" width="15" height="94" rx="2" transform="rotate(18 150 150)"/>
+    <path d="M24 116 Q100 136 176 116 L104 254 Q100 260 96 254 Z" fill="#FBF7F2" fill-opacity=".001"/>
+    <path d="M60 132 L98 248 M80 135 L99 250 M120 135 L101 250 M140 132 L102 248" stroke-width="1.2" opacity=".7"/>
+  </g>
+</symbol>
+
+
+<!-- Sketched Parisian shopfront (Direction C) -->
+<symbol id="facade" viewBox="0 0 600 400">
+  <g filter="url(#wc)" opacity=".8">
+    <ellipse cx="300" cy="230" rx="285" ry="155" fill="#F4DAD6"/>
+    <ellipse cx="130" cy="310" rx="120" ry="70" fill="#DCE1E6"/>
+    <ellipse cx="480" cy="300" rx="120" ry="70" fill="#DCE1E6"/>
+  </g>
+  <g filter="url(#sk)" stroke="#2F3A48" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M110 92 L140 40 H460 L490 92 Z" fill="#B7BEC6"/>
+    <path d="M200 92 V64 Q220 44 240 64 V92 Z M360 92 V64 Q380 44 400 64 V92 Z" fill="#FBF7F2"/>
+    <path d="M220 52 V92 M380 52 V92"/>
+    <rect x="100" y="92" width="400" height="280" fill="#FBF7F2"/>
+    <path d="M90 92 H510 M96 101 H504"/>
+    <rect x="150" y="111" width="300" height="54" fill="#2F3A48"/>
+    <path d="M118 176 H482 L502 214 H98 Z" fill="url(#awn)"/>
+    <path d="M98 214 q12.6 14 25.25 0 q12.6 14 25.25 0 q12.6 14 25.25 0 q12.6 14 25.25 0 q12.6 14 25.25 0 q12.6 14 25.25 0 q12.6 14 25.25 0 q12.6 14 25.25 0 q12.6 14 25.25 0 q12.6 14 25.25 0 q12.6 14 25.25 0 q12.6 14 25.25 0 q12.6 14 25.25 0 q12.6 14 25.25 0 q12.6 14 25.25 0 q12.6 14 25.25 0" fill="#E8B4B0"/>
+    <path d="M130 360 V264 Q130 232 180 232 Q230 232 230 264 V360 Z" fill="#E7ECF0"/>
+    <path d="M370 360 V264 Q370 232 420 232 Q470 232 470 264 V360 Z" fill="#E7ECF0"/>
+    <path d="M124 360 H236 M364 360 H476" stroke-width="3"/>
+    <path d="M262 372 V258 Q262 226 300 226 Q338 226 338 258 V372 Z" fill="#E8B4B0"/>
+    <path d="M300 228 V372 M272 280 H292 V350 H272 Z M308 280 H328 V350 H308 Z"/>
+    <circle cx="294" cy="318" r="2.5" fill="#2F3A48"/><circle cx="306" cy="318" r="2.5" fill="#2F3A48"/>
+    <path d="M248 232 V246 M352 232 V246"/>
+    <path d="M240 246 H256 L254 266 H242 Z M344 246 H360 L358 266 H346 Z" fill="#F3D79A"/>
+    <path d="M50 372 H550"/>
+    <path d="M100 372 L104 350 H126 L130 372" fill="#B7BEC6"/>
+    <path d="M470 372 L474 350 H496 L500 372" fill="#B7BEC6"/>
+    <path d="M115 350 q-14 -18 -4 -34 q10 12 4 34 q2 -22 16 -30 q4 18 -16 30" fill="#C9D3C4"/>
+    <path d="M485 350 q-14 -18 -4 -34 q10 12 4 34 q2 -22 16 -30 q4 18 -16 30" fill="#C9D3C4"/>
+  </g>
+  <use href="#fries-wash" x="150" y="262" width="60" height="84"/>
+  <use href="#fries-wash" x="390" y="262" width="60" height="84"/>
+  <text x="300" y="146" text-anchor="middle" font-family="'Bodoni Moda', Didot, serif" font-size="32" letter-spacing="10" fill="url(#goldleaf)">GRUFF</text>
+  <text x="300" y="159" text-anchor="middle" font-family="'Bodoni Moda', Didot, serif" font-size="8" letter-spacing="3.5" fill="#E9D9B0">MAISON DE FRITES · PARIS</text>
+</symbol>
+</svg>
+
+<main class="wrap">
+
+<!-- ================= COVER ================= -->
+<header class="cover">
+  <div class="cover-meta">
+    <span class="label">GRUFF · Website design directions</span>
+    <span class="label">3 October 2026</span>
+    <span class="label">For approval</span>
+  </div>
+  <h1>Three ways GRUFF could look online, <em>and one to choose.</em></h1>
+  <p class="lead">Each direction below answers the same brief: a Parisian fries house with the authority of an old newspaper, the warmth of a cinema at night, and the hand of a boutique illustrator. They share a menu and a brand name. They differ in layout, color and mood.</p>
+  <nav class="covers" aria-label="Directions">
+    <a class="cv cv-a" href="#a">
+      <div class="cv-art"><span>GRUFF</span></div>
+      <div class="cv-bars"><span style="background:#F8F6F1"></span><span style="background:#1A1A1A"></span><span style="background:#67625B"></span><span style="background:#B3261E"></span><span style="background:url("assets/gold-leaf.jpg") center/cover"></span></div>
+      <div class="cv-cap"><b>A · La Gazette</b><span class="label">Revised · print grid</span></div>
+    </a>
+    <a class="cv cv-b" href="#b">
+      <div class="cv-art"><span>Gruff</span></div>
+      <div class="cv-bars"><span style="background:#120D0A"></span><span style="background:#3A1514"></span><span style="background:#F4A23A"></span><span style="background:#C46A35"></span><span style="background:#E3C27A"></span></div>
+      <div class="cv-cap"><b>B · Le Cinéma</b><span class="label">Night &amp; glow</span></div>
+    </a>
+    <a class="cv cv-c" href="#c">
+      <div class="cv-art"><svg viewBox="0 0 600 400" aria-hidden="true"><use href="#facade"/></svg></div>
+      <div class="cv-bars"><span style="background:#FBF7F2"></span><span style="background:#F4DAD6"></span><span style="background:#E8B4B0"></span><span style="background:#A9B1BA"></span><span style="background:#2F3A48"></span></div>
+      <div class="cv-cap"><b>C · L'Atelier</b><span class="label">Watercolor shop</span></div>
+    </a>
+  </nav>
+</header>
+
+<!-- ================= BRIEF ================= -->
+<section class="sec" aria-labelledby="brief-h">
+  <div class="sec-head">
+    <div><span class="label">The brief, as materials</span><h2 id="brief-h">Six textures every direction draws from</h2></div>
+    <p>The brief mixes print, film and illustration. Rather than use all six at full volume, each direction picks two or three to lead and keeps the rest as accents.</p>
+  </div>
+  <div class="mats">
+    <div class="mat"><div class="mat-sw m-paper"></div><b>Distressed sepia paper</b><small>Grain, folds, faded ink</small></div>
+    <div class="mat"><div class="mat-sw m-ink"><img src="assets/gfx-potato-plant.jpg" alt="" style="width:78%;mix-blend-mode:multiply"></div><b>Ink line work</b><small>Antique engravings, hatching</small></div>
+    <div class="mat"><div class="mat-sw m-amber"></div><b>Amber light &amp; bokeh</b><small>Warm cinematic glow</small></div>
+    <div class="mat"><div class="mat-sw m-gold"><span>G</span></div><b>Gold-embossed lettering</b><small>Signage, shopfront gilding</small></div>
+    <div class="mat"><div class="mat-sw m-wash"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><g filter="url(#wc)"><ellipse cx="40" cy="45" rx="34" ry="26" fill="#E8B4B0" opacity=".8"/><ellipse cx="64" cy="64" rx="28" ry="22" fill="#A9B1BA" opacity=".6"/></g></svg></div><b>Watercolor washes</b><small>Pastel pink, cool grey</small></div>
+    <div class="mat"><div class="mat-sw m-marq"><span>Frites!</span></div><b>Marquee script</b><small>Hand-drawn, dimensional</small></div>
+  </div>
+</section>
+
+<!-- ================= DIRECTION A ================= -->
+<section class="dir dir-a" id="a" aria-labelledby="a-h">
+  <div class="dir-head">
+    <div>
+      <span class="label">Direction A · Revised</span>
+      <h2 class="dir-name" id="a-h">La Gazette</h2>
+      <p class="dir-idea">GRUFF as a daily newspaper. The site reads like a front page, and the fries are served in yesterday's edition.</p>
+    </div>
+    <ul class="moves">
+      <li><span class="label">Layout</span><span>Strict 12-column broadsheet grid with column rules, a masthead, datelines, a photo essay band and classifieds.</span></li>
+      <li><span class="label">Color</span><span>Light newsprint and black ink. Press red for actions. Real gold leaf on the masthead only.</span></li>
+      <li><span class="label">Imagery</span><span>Stock photography: food in full color, people and places in black and white. Public-domain engravings as spot graphics.</span></li>
+      <li><span class="label">Feels like</span><span>A Paris daily printed this morning, with an archive of old engravings.</span></li>
+    </ul>
+  </div>
+
+  <div class="browser">
+    <div class="bar"><i></i><i></i><i></i><span class="url">gruff.fr</span></div>
+    <div class="screen gz">
+      <div class="gz-top"><span>Vol. I · No. 47</span><span>Paris · Samedi 3 Octobre 2026</span><span>Prix&nbsp;: 4,50&nbsp;€</span></div>
+      <div class="gz-mast">
+        <span class="gz-ear"><img class="eng" src="assets/gfx-eiffel.jpg" alt=""><span>Paris 9<sup>e</sup><br>Depuis 2026</span></span>
+        <h3 class="gz-logo goldleaf">GRUFF</h3>
+        <span class="gz-ear r"><b>Édition du soir</b>Ouvert 17h — 2h<br>Frites fraîches toutes les heures</span>
+      </div>
+      <div class="gz-tag">Le Journal de la Frite · Rough-cut, double-fried, Paris 9<sup>e</sup></div>
+      <nav class="gz-nav"><span>Le Menu</span><span>Sauces</span><span>Our Story</span><span>Locations</span><span class="on">Order Now</span></nav>
+      <div class="gz-grid">
+        <article class="gz-col">
+          <div class="gz-kicker">Interview</div>
+          <h4>“A fry should argue back.”</h4>
+          <img class="gz-photo bw" src="assets/chef.jpg" alt="" style="aspect-ratio:4/3.4;object-position:30% 30%">
+          <div class="gz-credit"><span>Our head of fry, before service.</span><span>Photo · Unsplash</span></div>
+          <p class="dropcap">Bintje potatoes from the Nord, cut by hand each morning, rested, blanched at 140°, then finished at 185° to order. Nothing frozen, nothing coated.</p>
+          <div class="gz-cont"><img class="eng" src="assets/gfx-manicule.jpg" alt="">Suite en page 3</div>
+        </article>
+        <article class="gz-lead">
+          <div class="gz-kicker">À la une</div>
+          <h3 class="gz-head">Rough-Cut Frites Take the Left Bank</h3>
+          <p class="gz-deck">Double-fried in beef tallow, salted by hand and served on newsprint. Queues now reach Rue des Martyrs after midnight.</p>
+          <img class="gz-photo" src="assets/lead-fries-newsprint.jpg" alt="Fries with a pot of aïoli, a newspaper behind">
+          <div class="gz-credit"><span>La Classique with aïoli, at the Paris 9<sup>e</sup> counter.</span><span>Photo · Logan Weaver / Unsplash</span></div>
+        </article>
+        <aside class="gz-menu">
+          <div class="gz-kicker">Le Menu du Jour</div>
+          <ul>
+            <li><img src="assets/menu-classique.jpg" alt=""><div><div class="gz-row"><span>La Classique</span><i></i><b>4,50</b></div><em>Sea salt, beef tallow</em></div></li>
+            <li><img src="assets/menu-truffe.jpg" alt=""><div><div class="gz-row"><span>Truffe &amp; Comté</span><i></i><b>7,90</b></div><em>Black truffle, aged Comté</em></div></li>
+            <li><img src="assets/menu-poivre.jpg" alt=""><div><div class="gz-row"><span>Poivre Noir</span><i></i><b>5,20</b></div><em>Cracked Kampot pepper</em></div></li>
+            <li><img src="assets/menu-grande.jpg" alt=""><div><div class="gz-row"><span>La Grande</span><i></i><b>9,50</b></div><em>Sharing tray, four sauces</em></div></li>
+          </ul>
+          <div class="gz-order">
+            <div class="gz-stamp">Commander<small>Click &amp; collect · 12 min</small></div>
+            <img class="eng" src="assets/gfx-newsboy.jpg" alt="">
+          </div>
+        </aside>
+      </div>
+      <div class="gz-band">
+        <div class="gz-band-h"><h5>From field to fryer</h5><span>Reportage · Pages 4–5</span></div>
+        <div class="gz-essay">
+          <figure><img class="eng" src="assets/gfx-potato-plant.jpg" alt=""><figcaption>Solanum tuberosum, from an 1880s French field guide.</figcaption></figure>
+          <figure><img src="assets/potatoes.jpg" alt=""><figcaption>Bintje, delivered from the Nord every Tuesday and Friday.</figcaption></figure>
+          <figure><img class="bw" src="assets/paris-storefront.jpg" alt=""><figcaption>Our street: awnings, zinc and late tables.</figcaption></figure>
+          <figure><img class="bw" src="assets/paris-rooftops.jpg" alt="" style="object-position:50% 70%"><figcaption>Delivery radius: everything you can see from the roof.</figcaption></figure>
+        </div>
+      </div>
+      <div class="gz-class">
+        <div><div><span class="k">Wanted</span><h5>Aïoli au citron</h5>Garlic, Menton lemon. Seeks a crisp companion.</div><img src="assets/sauce-dip.jpg" alt=""></div>
+        <div><div><span class="k">For sale</span><h5>Béarnaise maison</h5>Tarragon, shallot, clarified butter. 1,50 €.</div></div>
+        <div><div><span class="k">Notice</span><h5>Mayo fumée</h5>Smoked over beechwood. Weekends only.</div><img class="eng" src="assets/gfx-utensils.jpg" alt=""></div>
+        <div><div><span class="k">Lost &amp; found</span><h5>Ketchup</h5>Available on request. We don't judge.</div><img class="eng" src="assets/gfx-manicule.jpg" alt="" style="width:4cqw;height:auto"></div>
+      </div>
+      <img class="gz-orn eng" src="assets/gfx-border.jpg" alt="">
+    </div>
+  </div>
+  <div class="caption"><span class="label">Homepage · desktop 1440</span><span class="label">Photos: Unsplash · Engravings: public domain · Copy and prices are placeholders</span></div>
+
+  <div class="detail">
+    <div>
+      <div class="blk">
+        <span class="label">Palette</span>
+        <div class="sw">
+          <div class="chip"><span style="background:#F8F6F1"></span><b>Newsprint</b><code>#F8F6F1</code></div>
+          <div class="chip"><span style="background:#1A1A1A"></span><b>Press black</b><code>#1A1A1A</code></div>
+          <div class="chip"><span style="background:#67625B"></span><b>Caption grey</b><code>#67625B</code></div>
+          <div class="chip"><span style="background:#D3CEC4"></span><b>Column rule</b><code>#D3CEC4</code></div>
+          <div class="chip"><span style="background:#B3261E"></span><b>Press red</b><code>#B3261E</code></div>
+          <div class="chip"><span style="background:url("assets/gold-leaf.jpg") center/cover"></span><b>Gold leaf</b><code>photo texture</code></div>
+        </div>
+      </div>
+      <div class="blk">
+        <span class="label">Typography</span>
+        <div class="ty">
+          <div class="ty-row"><span class="s" style="font-family:'Rozha One',serif;font-size:40px">Extra! Frites!</span><span class="n"><b>Rozha One</b>Masthead, headlines</span></div>
+          <div class="ty-row"><span class="s" style="font-family:'IM Fell English',serif;font-size:20px">Double-fried in beef tallow, salted by hand.</span><span class="n"><b>IM Fell English</b>Long-form body</span></div>
+          <div class="ty-row"><span class="s" style="font-family:'Courier Prime',monospace;font-size:15px;letter-spacing:.12em">PARIS — 17H00 — 4,50 €</span><span class="n"><b>Courier Prime</b>Datelines, prices</span></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="blk">
+        <span class="label">Components</span>
+        <div class="panel pa">
+          <span class="pa-kick">Le Menu du Jour</span>
+          <div class="pa-item"><img src="assets/menu-truffe.jpg" alt=""><div><div class="pa-row"><span>Truffe &amp; Comté</span><i></i><b>7,90</b></div><em>Black truffle, aged Comté</em></div></div>
+          <span class="pa-extra">EXTRA!</span>
+          <span class="pa-link"><img class="eng" src="assets/gfx-manicule.jpg" alt="">Voir la carte</span>
+          <div class="pa-stamp">Commander<small>Click &amp; collect</small></div>
+        </div>
+      </div>
+      <div class="blk">
+        <span class="label">Where the brief shows up</span>
+        <ul class="moves">
+          <li><span class="label">Print grid</span><span>Every page type (menu, locations, story) gets its own column layout.</span></li>
+          <li><span class="label">Gold emboss</span><span>Real gold-leaf texture, on the masthead only.</span></li>
+          <li><span class="label">Ink line work</span><span>Antique engravings for spot art: Eiffel, newsboy, manicule, potato plant.</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="phone-col">
+      <div class="phone"><div class="ps gz-m">
+        <div class="t"><span>Paris · Sam. 3 Oct.</span><span>4,50 €</span></div>
+        <div class="lg goldleaf">GRUFF</div>
+        <div class="tg">Le Journal de la Frite</div>
+        <div class="nv"><span>☰ Sections</span><b>Commander</b></div>
+        <h4>Rough-Cut Frites Take the Left Bank</h4>
+        <img class="ph" src="assets/lead-fries-newsprint.jpg" alt="">
+        <div class="cr">Photo · Logan Weaver / Unsplash</div>
+        <div class="k">Le Menu du Jour</div>
+        <div class="r"><img src="assets/menu-classique.jpg" alt=""><div><span>La Classique</span><i></i><b>4,50</b></div></div>
+        <div class="r"><img src="assets/menu-truffe.jpg" alt=""><div><span>Truffe</span><i></i><b>7,90</b></div></div>
+        <div class="r"><img src="assets/menu-poivre.jpg" alt=""><div><span>Poivre Noir</span><i></i><b>5,20</b></div></div>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="lib">
+    <div class="lib-set">
+      <span class="label">Photography · Unsplash, free for commercial use</span>
+      <p>Food is always in full color, shot close and warm. People and streets are converted to black and white so they sit in the newspaper like press photos.</p>
+      <div class="lib-grid">
+        <figure><img src="assets/menu-classique.jpg" alt=""><figcaption>Product, color</figcaption></figure>
+        <figure><img src="assets/sauce-dip.jpg" alt=""><figcaption>Sauces, color</figcaption></figure>
+        <figure><img class="bw" src="assets/chef.jpg" alt=""><figcaption>People, B&amp;W</figcaption></figure>
+        <figure><img class="bw" src="assets/paris-storefront.jpg" alt=""><figcaption>Places, B&amp;W</figcaption></figure>
+      </div>
+    </div>
+    <div class="lib-set">
+      <span class="label">Graphics · public domain / CC0 engravings</span>
+      <p>Spot graphics come from 19th-century engravings and printers' stock art. They print in black ink straight onto the newsprint, with no recoloring.</p>
+      <div class="lib-grid">
+        <figure><img class="eng" src="assets/gfx-newsboy.jpg" alt=""><figcaption>Newsboy · order CTA</figcaption></figure>
+        <figure><img class="eng" src="assets/gfx-manicule.jpg" alt=""><figcaption>Manicule · links</figcaption></figure>
+        <figure><img class="eng" src="assets/gfx-eiffel.jpg" alt=""><figcaption>Eiffel · masthead ear</figcaption></figure>
+        <figure><img class="eng" src="assets/gfx-potato-plant.jpg" alt=""><figcaption>Potato plant · sourcing</figcaption></figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DIRECTION B ================= -->
+<section class="dir dir-b" id="b" aria-labelledby="b-h">
+  <div class="dir-head">
+    <div>
+      <span class="label">Direction B</span>
+      <h2 class="dir-name" id="b-h">Le Cinéma</h2>
+      <p class="dir-idea">GRUFF as a picture house at night. Every visit is a screening, and the fries are the feature presentation.</p>
+    </div>
+    <ul class="moves">
+      <li><span class="label">Layout</span><span>Wide asymmetric hero with a spotlit product, then a film-strip row of menu items as posters.</span></li>
+      <li><span class="label">Color</span><span>Near-black and bordeaux velvet, lit by glowing amber and copper, with gold for titles.</span></li>
+      <li><span class="label">Imagery</span><span>Glossy 3D-rendered fries, soft bokeh, light beams and a lit marquee sign.</span></li>
+      <li><span class="label">Feels like</span><span>Opening night at a Grands Boulevards cinema.</span></li>
+    </ul>
+  </div>
+
+  <div class="browser">
+    <div class="bar"><i></i><i></i><i></i><span class="url">gruff.fr</span></div>
+    <div class="screen cn">
+      <div class="bokeh" aria-hidden="true">
+        <span style="left:58cqw;top:6cqw;width:5cqw;height:5cqw"></span>
+        <span class="p" style="left:88cqw;top:10cqw;width:7cqw;height:7cqw"></span>
+        <span class="c" style="left:52cqw;top:30cqw;width:3.5cqw;height:3.5cqw"></span>
+        <span style="left:92cqw;top:30cqw;width:4cqw;height:4cqw"></span>
+        <span class="p" style="left:6cqw;top:40cqw;width:3cqw;height:3cqw"></span>
+        <span class="c" style="left:80cqw;top:3cqw;width:2.5cqw;height:2.5cqw"></span>
+        <span style="left:47cqw;top:12cqw;width:2cqw;height:2cqw"></span>
+      </div>
+      <nav class="cn-nav"><span class="cn-mini">Gruff</span><div><span>Now Frying</span><span>Matinée Menu</span><span>Cinémas</span><span>Story</span></div><span class="cn-ticket">Order · Admit One</span></nav>
+      <section class="cn-hero">
+        <div class="cn-copy">
+          <div class="cn-marquee">
+            <span class="cn-pre">Ce soir · Tonight</span>
+            <h3>Gruff</h3>
+            <span class="cn-sub goldtxt">The Double-Fried Feature</span>
+          </div>
+          <p>Hand-cut Bintje potatoes, blanched at 140°, finished at 185°. A frite in two acts with a crackling finale.</p>
+          <div class="cn-ctas"><span class="btn-amber">Reserve your cone</span><span class="btn-ghost">Watch the trailer ▸</span></div>
+        </div>
+        <div class="cn-stage">
+          <div class="cn-spot"></div>
+          <div class="cn-floor"></div>
+          <svg viewBox="0 0 200 262" aria-hidden="true"><use href="#fries-gloss"/></svg>
+          <div class="cn-temp">Act I<b>140°</b>Act II<b>185°</b></div>
+        </div>
+      </section>
+      <section class="cn-strip">
+        <div class="cn-strip-h">Now Showing <span>Four features nightly, from 17h</span></div>
+        <div class="cn-reel">
+          <div class="cn-poster p1"><span class="pre">Gruff présente</span><svg viewBox="0 0 200 262" aria-hidden="true"><use href="#fries-gloss"/></svg><div><h5 class="goldtxt">La Classique</h5><span class="meta">Sea salt · 4,50 €</span></div></div>
+          <div class="cn-poster p2"><span class="pre">Gruff présente</span><svg viewBox="0 0 200 262" aria-hidden="true"><use href="#fries-gloss"/></svg><div><h5 class="goldtxt">Truffe &amp; Comté</h5><span class="meta">The prestige cut · 7,90 €</span></div></div>
+          <div class="cn-poster p3"><span class="pre">Gruff présente</span><svg viewBox="0 0 200 262" aria-hidden="true"><use href="#fries-gloss"/></svg><div><h5 class="goldtxt">Poivre Noir</h5><span class="meta">A thriller · 5,20 €</span></div></div>
+          <div class="cn-poster p4"><span class="pre">Gruff présente</span><svg viewBox="0 0 200 262" aria-hidden="true"><use href="#fries-gloss"/></svg><div><h5 class="goldtxt">La Grande</h5><span class="meta">For two · 9,50 €</span></div></div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <div class="caption"><span class="label">Homepage · desktop 1440</span><span class="label">Final fries would be studio 3D renders</span></div>
+
+  <div class="detail">
+    <div>
+      <div class="blk">
+        <span class="label">Palette</span>
+        <div class="sw">
+          <div class="chip"><span style="background:#120D0A"></span><b>Projection black</b><code>#120D0A</code></div>
+          <div class="chip"><span style="background:#3A1514"></span><b>Velvet seat</b><code>#3A1514</code></div>
+          <div class="chip"><span style="background:#F4A23A"></span><b>Bulb amber</b><code>#F4A23A</code></div>
+          <div class="chip"><span style="background:#C46A35"></span><b>Copper</b><code>#C46A35</code></div>
+          <div class="chip"><span style="background:linear-gradient(180deg,#F8E7B5,#E3C27A 45%,#9C7430 55%,#E9CF8A)"></span><b>Title gold</b><code>#E3C27A</code></div>
+          <div class="chip"><span style="background:#E9A9A0"></span><b>Bokeh pink</b><code>#E9A9A0</code></div>
+        </div>
+      </div>
+      <div class="blk">
+        <span class="label">Typography</span>
+        <div class="ty">
+          <div class="ty-row" style="background:#1A110D;padding:10px 14px;border-radius:4px;border:0"><span class="s pb-script" style="font-size:44px">Gruff</span><span class="n" style="color:#C9B89A"><b style="color:#F3E6CF">Shrikhand</b>Extruded marquee script</span></div>
+          <div class="ty-row"><span class="s" style="font-family:'Cinzel',serif;font-weight:700;font-size:22px;letter-spacing:.18em">NOW FRYING</span><span class="n"><b>Cinzel</b>Gold titles, nav</span></div>
+          <div class="ty-row"><span class="s" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:22px">A frite in two acts, with a crackling finale.</span><span class="n"><b>Cormorant Garamond</b>Body, captions</span></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="blk">
+        <span class="label">Components</span>
+        <div class="panel pb">
+          <span class="btn-amber">Reserve your cone</span>
+          <div class="pb-ticket"><span>ADMIT ONE</span><div><b>La Classique</b>Séance 21h40 · 4,50 €</div></div>
+          <span class="pb-chip">★★★★½ · Salt: generous</span>
+        </div>
+      </div>
+      <div class="blk">
+        <span class="label">Where the brief shows up</span>
+        <ul class="moves">
+          <li><span class="label">Spatial depth</span><span>Layered beams, bokeh and a floor glow behind the product.</span></li>
+          <li><span class="label">3D / gloss</span><span>Hero and menu use rendered, glossy fries.</span></li>
+          <li><span class="label">Marquee script</span><span>The logo lives on a lit sign with bulb border.</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="phone-col">
+      <div class="phone"><div class="ps cn-m">
+        <div class="nv"><span>Gruff</span>☰ MENU</div>
+        <div class="mq"><small>CE SOIR</small><b>Gruff</b></div>
+        <div class="st"><svg viewBox="0 0 200 262" aria-hidden="true"><use href="#fries-gloss"/></svg></div>
+        <p>The double-fried feature. Nightly from 17h.</p>
+        <span class="bt">RESERVE YOUR CONE</span>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DIRECTION C ================= -->
+<section class="dir dir-c" id="c" aria-labelledby="c-h">
+  <div class="dir-head">
+    <div>
+      <span class="label">Direction C</span>
+      <h2 class="dir-name" id="c-h">L'Atelier</h2>
+      <p class="dir-idea">GRUFF as a little shop on a Paris street, drawn in ink and watercolor. The homepage is the shopfront; the menu is its window display.</p>
+    </div>
+    <ul class="moves">
+      <li><span class="label">Layout</span><span>Fully symmetrical: split nav around a script logo, a centered facade, three arched window cards.</span></li>
+      <li><span class="label">Color</span><span>White paper with blush and cool-grey washes, slate ink, and gold leaf on the shop sign.</span></li>
+      <li><span class="label">Imagery</span><span>Hand-sketched architecture, loose ink lines and organic watercolor shading.</span></li>
+      <li><span class="label">Feels like</span><span>A patisserie box, or an illustrated travel journal.</span></li>
+    </ul>
+  </div>
+
+  <div class="browser">
+    <div class="bar"><i></i><i></i><i></i><span class="url">gruff.fr</span></div>
+    <div class="screen at">
+      <nav class="at-nav"><div><span>La Carte</span><span>Sauces</span></div><span class="at-logo">Gruff</span><div><span>La Maison</span><span>Commander</span></div></nav>
+      <div class="at-pre">Bienvenue à la</div>
+      <h3 class="at-h">Maison de <em>Frites</em></h3>
+      <div class="at-hero">
+        <div class="at-side"><span class="c">Ouvert</span><span class="s">tous les soirs</span><p>Mardi — Dimanche<br>17h00 — 02h00</p><span class="c">Paris 9<sup>e</sup></span></div>
+        <svg viewBox="0 0 600 400" aria-hidden="true"><use href="#facade"/></svg>
+        <div class="at-side"><span class="c">La spécialité</span><span class="s">Truffe &amp; Comté</span><p>Black truffle, Comté<br>aged 24 months</p><b>7,90 €</b></div>
+      </div>
+      <span class="at-btn"><span>Commander en ligne</span></span>
+      <div class="at-orn">La vitrine</div>
+      <div class="at-vit">
+        <div class="at-card"><div class="arch w1"><svg viewBox="0 0 200 262" aria-hidden="true"><use href="#fries-wash"/></svg></div><div class="nm">La Classique</div><div class="ds">Sea salt, beef tallow</div><div class="pr">4,50 €</div></div>
+        <div class="at-card"><div class="arch w2"><svg viewBox="0 0 200 262" aria-hidden="true"><use href="#fries-wash"/></svg></div><div class="nm">Poivre Noir</div><div class="ds">Cracked Kampot pepper</div><div class="pr">5,20 €</div></div>
+        <div class="at-card"><div class="arch w3"><svg viewBox="0 0 200 262" aria-hidden="true"><use href="#fries-wash"/></svg></div><div class="nm">La Grande</div><div class="ds">Sharing cone, two sauces</div><div class="pr">9,50 €</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="caption"><span class="label">Homepage · desktop 1440</span><span class="label">Final art would be commissioned watercolor</span></div>
+
+  <div class="detail">
+    <div>
+      <div class="blk">
+        <span class="label">Palette</span>
+        <div class="sw">
+          <div class="chip"><span style="background:#FBF7F2"></span><b>Atelier paper</b><code>#FBF7F2</code></div>
+          <div class="chip"><span style="background:#F4DAD6"></span><b>Blush wash</b><code>#F4DAD6</code></div>
+          <div class="chip"><span style="background:#E8B4B0"></span><b>Awning pink</b><code>#E8B4B0</code></div>
+          <div class="chip"><span style="background:#A9B1BA"></span><b>Zinc roof grey</b><code>#A9B1BA</code></div>
+          <div class="chip"><span style="background:#2F3A48"></span><b>Slate ink</b><code>#2F3A48</code></div>
+          <div class="chip"><span style="background:linear-gradient(180deg,#F5E2A8,#D2AE58 50%,#9A7430 56%,#E9CF8A)"></span><b>Gold leaf</b><code>#B8913F</code></div>
+        </div>
+      </div>
+      <div class="blk">
+        <span class="label">Typography</span>
+        <div class="ty">
+          <div class="ty-row"><span class="s" style="font-family:'Pinyon Script',cursive;font-size:46px">La Truffe</span><span class="n"><b>Pinyon Script</b>Hand-lettered names</span></div>
+          <div class="ty-row"><span class="s" style="font-family:'Bodoni Moda',serif;font-size:21px;letter-spacing:.2em">MAISON DE FRITES</span><span class="n"><b>Bodoni Moda</b>Signage, gold leaf</span></div>
+          <div class="ty-row"><span class="s" style="font-family:'Spectral',serif;font-size:19px">Cut by hand each morning, fried to order.</span><span class="n"><b>Spectral</b>Body</span></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="blk">
+        <span class="label">Components</span>
+        <div class="panel pc">
+          <span class="pc-btn"><span>Commander</span></span>
+          <div class="pc-arch"><div><svg viewBox="0 0 200 262" aria-hidden="true"><use href="#fries-wash"/></svg></div><p>La Truffe<small>7,90 €</small></p></div>
+          <span class="pc-tag">fait main</span>
+        </div>
+      </div>
+      <div class="blk">
+        <span class="label">Where the brief shows up</span>
+        <ul class="moves">
+          <li><span class="label">Architecture</span><span>Symmetrical, hand-sketched shopfront as the hero.</span></li>
+          <li><span class="label">Watercolor</span><span>Pastel washes behind every product and section.</span></li>
+          <li><span class="label">Gold lettering</span><span>Gilded shop sign, echoed in buttons.</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="phone-col">
+      <div class="phone"><div class="ps at-m">
+        <div class="nv"><span>Carte</span><b>Gruff</b><span>☰</span></div>
+        <div class="pre">Bienvenue à la</div>
+        <h4>Maison de <em>Frites</em></h4>
+        <svg class="f" viewBox="0 0 600 400" aria-hidden="true"><use href="#facade"/></svg>
+        <span class="bt"><span>Commander</span></span>
+        <div class="cd"><div class="arch"><svg viewBox="0 0 200 262" aria-hidden="true"><use href="#fries-wash"/></svg></div><b>La Classique</b></div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= COMPARISON ================= -->
+<section class="sec" aria-labelledby="cmp-h" style="padding-top:96px">
+  <div class="sec-head">
+    <div><span class="label">Side by side</span><h2 id="cmp-h">How each direction covers the brief</h2></div>
+    <p>Filled dots show how strongly each direction expresses a part of the brief, and how it rates on practical concerns for launch.</p>
+  </div>
+  <div class="cmp-wrap">
+    <table class="cmp">
+      <thead><tr><th style="width:34%"><span class="label">Criterion</span></th><th><span class="label">A</span><span class="hn">La Gazette</span></th><th><span class="label">B</span><span class="hn">Le Cinéma</span></th><th><span class="label">C</span><span class="hn">L'Atelier</span></th></tr></thead>
+      <tbody>
+        <tr class="grp"><td colspan="4">Brief coverage</td></tr>
+        <tr><td>Print-media column grid</td><td><span class="m" data-v="3"><i></i><i></i><i></i></span></td><td><span class="m" data-v="1"><i></i><i></i><i></i></span></td><td><span class="m" data-v="2"><i></i><i></i><i></i></span></td></tr>
+        <tr><td>Cinematic light &amp; spatial depth</td><td><span class="m" data-v="1"><i></i><i></i><i></i></span></td><td><span class="m" data-v="3"><i></i><i></i><i></i></span></td><td><span class="m" data-v="2"><i></i><i></i><i></i></span></td></tr>
+        <tr><td>Gold-embossed lettering</td><td><span class="m" data-v="3"><i></i><i></i><i></i></span></td><td><span class="m" data-v="2"><i></i><i></i><i></i></span></td><td><span class="m" data-v="3"><i></i><i></i><i></i></span></td></tr>
+        <tr><td>Hand-drawn marquee script</td><td><span class="m" data-v="1"><i></i><i></i><i></i></span></td><td><span class="m" data-v="3"><i></i><i></i><i></i></span></td><td><span class="m" data-v="2"><i></i><i></i><i></i></span></td></tr>
+        <tr><td>Watercolor &amp; pastel washes</td><td><span class="m" data-v="1"><i></i><i></i><i></i></span></td><td><span class="m" data-v="1"><i></i><i></i><i></i></span></td><td><span class="m" data-v="3"><i></i><i></i><i></i></span></td></tr>
+        <tr><td>Glossy 3D / CGI textures</td><td><span class="m" data-v="1"><i></i><i></i><i></i></span></td><td><span class="m" data-v="3"><i></i><i></i><i></i></span></td><td><span class="m" data-v="1"><i></i><i></i><i></i></span></td></tr>
+        <tr><td>Ink line work &amp; flat portraiture</td><td><span class="m" data-v="3"><i></i><i></i><i></i></span></td><td><span class="m" data-v="1"><i></i><i></i><i></i></span></td><td><span class="m" data-v="3"><i></i><i></i><i></i></span></td></tr>
+        <tr class="grp"><td colspan="4">Practical</td></tr>
+        <tr><td>Long-form readability<small>Story, menu notes, blog</small></td><td><span class="m" data-v="3"><i></i><i></i><i></i></span></td><td><span class="m" data-v="2"><i></i><i></i><i></i></span></td><td><span class="m" data-v="2"><i></i><i></i><i></i></span></td></tr>
+        <tr><td>Mobile fit<small>How well the layout survives a phone</small></td><td><span class="m" data-v="2"><i></i><i></i><i></i></span></td><td><span class="m" data-v="3"><i></i><i></i><i></i></span></td><td><span class="m" data-v="3"><i></i><i></i><i></i></span></td></tr>
+        <tr><td>Ease of asset production<small>Stock photos and public-domain engravings are ready now; 3D renders and painted watercolor are not</small></td><td><span class="m" data-v="3"><i></i><i></i><i></i></span></td><td><span class="m" data-v="1"><i></i><i></i><i></i></span></td><td><span class="m" data-v="2"><i></i><i></i><i></i></span></td></tr>
+        <tr><td>Stands apart from other food brands</td><td><span class="m" data-v="3"><i></i><i></i><i></i></span></td><td><span class="m" data-v="2"><i></i><i></i><i></i></span></td><td><span class="m" data-v="2"><i></i><i></i><i></i></span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="legend"><span><span class="m" data-v="3"><i></i><i></i><i></i></span> Strong</span><span><span class="m" data-v="2"><i></i><i></i><i></i></span> Partial</span><span><span class="m" data-v="1"><i></i><i></i><i></i></span> Light touch</span></div>
+</section>
+
+<!-- ================= RECOMMENDATION ================= -->
+<section class="sec" aria-labelledby="rec-h" style="padding-top:96px">
+  <div class="sec-head">
+    <div><span class="label">Recommendation</span><h2 id="rec-h">Go with La Gazette, as revised</h2></div>
+    <p>C covers the most of the brief on paper, but the brief names the print grid as the foundation. A gives every page an obvious home, and with stock photography it can launch without commissioned art.</p>
+  </div>
+  <div class="rec">
+    <div class="rec-card">
+      <span class="label">Proposed</span>
+      <h3><span class="goldleaf">GRUFF</span> La Gazette, with one borrowed move</h3>
+      <p>Keep A's newspaper grid, light newsprint palette, stock photography and engraved spot art as the system. Add one element from Direction B where it adds the most.</p>
+      <div class="borrow">
+        <div><b>From B · Le Cinéma</b>The extruded marquee script for the evening "Édition du soir" banner and late-night promotions.</div>
+        <div><b>Photography rule</b>Food in full color, people and places in black and white, so the page always reads as a newspaper.</div>
+      </div>
+    </div>
+    <ul class="why">
+      <li><span><b>It matches the brief's structure.</b> The brief puts the column grid first and layers depth and sketched elements on top. A+ follows that order.</span></li>
+      <li><span><b>It scales to every page.</b> Menu, locations, story and order flow all map to newspaper sections without new layout ideas.</span></li>
+      <li><span><b>It is the cheapest to launch.</b> Stock photography and public-domain engravings are available now. No 3D studio or painted commissions are needed.</span></li>
+      <li><span><b>It gives the product a story.</b> Frites served in newsprint is a real tradition, so the packaging and the website say the same thing.</span></li>
+    </ul>
+  </div>
+
+  <h3 style="font-weight:400;font-size:26px;margin:52px 0 0">The decision we need</h3>
+  <div class="decide">
+    <div class="opt rec-o"><span class="label">Recommended</span><b>A + marquee</b>Revised Gazette with B's marquee script for evening promos.</div>
+    <div class="opt"><span class="label">Option</span><b>A · La Gazette</b>As shown, no borrowed elements.</div>
+    <div class="opt"><span class="label">Option</span><b>B · Le Cinéma</b>Needs a 3D render budget for product imagery.</div>
+    <div class="opt"><span class="label">Option</span><b>C · L'Atelier</b>Needs a commissioned watercolor illustrator.</div>
+  </div>
+
+  <h3 style="font-weight:400;font-size:26px;margin:52px 0 0">After approval</h3>
+  <div class="steps">
+    <div><b>Design system</b>Colors, type scale, grid and components as tokens.</div>
+    <div><b>Key pages in high fidelity</b>Home, menu, locations and order.</div>
+    <div><b>Image library</b>License final photos, plan our own product shoot, curate engravings.</div>
+    <div><b>Frontend build</b>Responsive site built from the system.</div>
+  </div>
+
+  <details class="credits"><summary class="label">Image credits</summary><ul><li>lead-fries-newsprint: photo by Logan Weaver, Unsplash License</li><li>menu-classique: photo by Louis Hansel, Unsplash License</li><li>menu-truffe: photo by Markus Winkler, Unsplash License</li><li>menu-poivre: photo by Pixzolo Photography, Unsplash License</li><li>menu-grande: photo by henry perks, Unsplash License</li><li>sauce-dip: photo by Abbie Newton, Unsplash License</li><li>paris-storefront: photo by Camille Brodard, Unsplash License</li><li>paris-rooftops: photo by Adrien, Unsplash License</li><li>potatoes: photo by Hai Nguyen, Unsplash License</li><li>chef: photo by atelierbyvineeth ..., Unsplash License</li><li>gold-leaf: photo by Kier in Sight Archives, Unsplash License</li><li>gfx-potato-plant: public domain engraving via flickr</li><li>gfx-eiffel: CC0 engraving via rawpixel</li><li>gfx-border: public domain engraving via flickr</li><li>gfx-utensils: public domain engraving via flickr</li><li>gfx-newsboy: CC0 engraving via rawpixel</li><li>gfx-manicule: CC0 engraving via rawpixel</li></ul></details>
+  <footer class="foot"><span>GRUFF · Design directions · 3 October 2026</span><span>Copy and prices are placeholders. Photos are Unsplash stock; the final site would add our own product shoot.</span></footer>
+</section>
+
+</main>
